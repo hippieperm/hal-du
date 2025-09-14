@@ -33,7 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _onScroll() {
     setState(() {
-      _isAppBarTransparent = true; // 항상 투명 모드로 설정
+      _isAppBarTransparent = _scrollController.offset < 50;
     });
   }
 

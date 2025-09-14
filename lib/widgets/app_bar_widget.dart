@@ -20,8 +20,8 @@ class AppBarWidget extends StatelessWidget {
       height: 80,
       decoration: BoxDecoration(
         color: isTransparent
-            ? Colors.black.withOpacity(0.3)
-            : Colors.white.withOpacity(0.95),
+            ? Colors.transparent
+            : Colors.white,
         boxShadow: isTransparent
             ? []
             : [
