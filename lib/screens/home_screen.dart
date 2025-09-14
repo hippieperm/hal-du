@@ -40,7 +40,6 @@ class _HomeScreenState extends State<HomeScreen> {
             controller: _scrollController,
             child: Column(
               children: [
-                const SizedBox(height: 80), // 앱바 높이만큼 여백
                 const HeroSection(),
                 const AboutSection(),
                 const ContentsSection(),
