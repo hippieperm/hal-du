@@ -1,0 +1,25 @@
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'screens/home_screen.dart';
+
+void main() {
+  runApp(const HaldoApp());
+}
+
+class HaldoApp extends StatelessWidget {
+  const HaldoApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: '할두 - 할머니가 되어서도 두근두근!',
+      theme: ThemeData(
+        primarySwatch: Colors.pink,
+        textTheme: GoogleFonts.notoSansTextTheme(),
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+      ),
+      home: const HomeScreen(),
+      debugShowCheckedModeBanner: false,
+    );
+  }
+}
