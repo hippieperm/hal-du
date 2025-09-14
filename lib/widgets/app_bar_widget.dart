@@ -4,26 +4,33 @@ import 'package:google_fonts/google_fonts.dart';
 class AppBarWidget extends StatelessWidget {
   final int selectedIndex;
   final Function(int) onItemTapped;
+  final bool isTransparent;
 
   const AppBarWidget({
     super.key,
     required this.selectedIndex,
     required this.onItemTapped,
+    this.isTransparent = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 200),
       height: 80,
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.9),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        color: isTransparent
+            ? Colors.transparent
+            : Colors.white.withOpacity(0.95),
+        boxShadow: isTransparent
+            ? []
+            : [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 10,
+                  offset: const Offset(0, 2),
+                ),
+              ],
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -36,7 +43,9 @@ class AppBarWidget extends StatelessWidget {
               style: GoogleFonts.notoSans(
                 fontSize: 32,
                 fontWeight: FontWeight.bold,
-                color: const Color(0xFF2ECC71), // 이미지의 초록색
+                color: isTransparent
+                    ? Colors.white
+                    : const Color(0xFF2ECC71), // 이미지의 초록색
               ),
             ),
 
@@ -62,7 +71,9 @@ class AppBarWidget extends StatelessWidget {
                   child: Text(
                     '로그인',
                     style: GoogleFonts.notoSans(
-                      color: Colors.grey[700],
+                      color: isTransparent
+                          ? Colors.white.withOpacity(0.9)
+                          : Colors.grey[700],
                       fontSize: 16,
                     ),
                   ),
@@ -95,7 +106,9 @@ class AppBarWidget extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: Colors.grey[100],
+                    color: isTransparent
+                        ? Colors.white.withOpacity(0.2)
+                        : Colors.grey[100],
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Row(
@@ -103,14 +116,16 @@ class AppBarWidget extends StatelessWidget {
                     children: [
                       Icon(
                         Icons.shopping_cart_outlined,
-                        color: Colors.grey[700],
+                        color: isTransparent ? Colors.white : Colors.grey[700],
                         size: 20,
                       ),
                       const SizedBox(width: 4),
                       Text(
                         '0',
                         style: GoogleFonts.notoSans(
-                          color: Colors.grey[700],
+                          color: isTransparent
+                              ? Colors.white
+                              : Colors.grey[700],
                           fontSize: 14,
                         ),
                       ),
@@ -124,7 +139,10 @@ class AppBarWidget extends StatelessWidget {
                     onPressed: () {
                       // 모바일 메뉴 열기
                     },
-                    icon: const Icon(Icons.menu, color: Colors.grey),
+                    icon: Icon(
+                      Icons.menu,
+                      color: isTransparent ? Colors.white : Colors.grey,
+                    ),
                   ),
               ],
             ),
@@ -144,7 +162,11 @@ class AppBarWidget extends StatelessWidget {
           fontWeight: selectedIndex == index
               ? FontWeight.bold
               : FontWeight.normal,
-          color: selectedIndex == index ? Colors.pink[600] : Colors.grey[700],
+          color: isTransparent
+              ? (selectedIndex == index
+                    ? Colors.white
+                    : Colors.white.withOpacity(0.8))
+              : (selectedIndex == index ? Colors.pink[600] : Colors.grey[700]),
         ),
       ),
     );

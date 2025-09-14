@@ -16,11 +16,27 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final ScrollController _scrollController = ScrollController();
   int _selectedIndex = 0;
+  double _scrollOffset = 0.0;
+  bool _isAppBarTransparent = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
 
   @override
   void dispose() {
+    _scrollController.removeListener(_onScroll);
     _scrollController.dispose();
     super.dispose();
+  }
+
+  void _onScroll() {
+    setState(() {
+      _scrollOffset = _scrollController.offset;
+      _isAppBarTransparent = _scrollOffset < 100;
+    });
   }
 
   void _onItemTapped(int index) {
@@ -56,6 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: AppBarWidget(
               selectedIndex: _selectedIndex,
               onItemTapped: _onItemTapped,
+              isTransparent: _isAppBarTransparent,
             ),
           ),
         ],
