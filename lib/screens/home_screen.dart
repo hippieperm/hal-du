@@ -16,7 +16,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final ScrollController _scrollController = ScrollController();
   int _selectedIndex = 0;
-  double _scrollOffset = 0.0;
   bool _isAppBarTransparent = true;
 
   @override
@@ -34,8 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _onScroll() {
     setState(() {
-      _scrollOffset = _scrollController.offset;
-      _isAppBarTransparent = _scrollOffset < 100;
+      _isAppBarTransparent = true; // 항상 투명 모드로 설정
     });
   }
 
