@@ -20,7 +20,7 @@ class AppBarWidget extends StatelessWidget {
       height: 80,
       decoration: BoxDecoration(
         color: isTransparent
-            ? Colors.transparent
+            ? Colors.black.withOpacity(0.3)
             : Colors.white.withOpacity(0.95),
         boxShadow: isTransparent
             ? []
@@ -165,7 +165,7 @@ class AppBarWidget extends StatelessWidget {
           color: isTransparent
               ? (selectedIndex == index
                     ? Colors.white
-                    : Colors.white.withOpacity(0.8))
+                    : Colors.white.withOpacity(0.9))
               : (selectedIndex == index ? Colors.pink[600] : Colors.grey[700]),
         ),
       ),
