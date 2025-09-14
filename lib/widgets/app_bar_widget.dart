@@ -26,7 +26,7 @@ class AppBarWidget extends StatelessWidget {
             ? []
             : [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black.withValues(alpha: 0.1),
                   blurRadius: 10,
                   offset: const Offset(0, 2),
                 ),
@@ -72,7 +72,7 @@ class AppBarWidget extends StatelessWidget {
                     '로그인',
                     style: GoogleFonts.notoSans(
                       color: isTransparent
-                          ? Colors.white.withOpacity(0.9)
+                          ? Colors.white.withValues(alpha: 0.9)
                           : Colors.grey[700],
                       fontSize: 16,
                     ),
@@ -107,7 +107,7 @@ class AppBarWidget extends StatelessWidget {
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
                     color: isTransparent
-                        ? Colors.white.withOpacity(0.2)
+                        ? Colors.white.withValues(alpha: 0.2)
                         : Colors.grey[100],
                     borderRadius: BorderRadius.circular(8),
                   ),
@@ -165,7 +165,7 @@ class AppBarWidget extends StatelessWidget {
           color: isTransparent
               ? (selectedIndex == index
                     ? Colors.white
-                    : Colors.white.withOpacity(0.9))
+                    : Colors.white.withValues(alpha: 0.9))
               : (selectedIndex == index ? Colors.pink[600] : Colors.grey[700]),
         ),
       ),
