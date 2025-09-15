@@ -20,8 +20,8 @@ class _HeroSectionState extends State<HeroSection>
     super.initState();
     _imagePaths = [
       'assets/images/grandmother.jpg',
-      'assets/images/hero_image_1.jpg',
-      'assets/images/hero_image_2.jpg',
+      'assets/images/grandmother.jpg',
+      'assets/images/grandmother.jpg',
     ];
 
     _animationController = AnimationController(
@@ -240,12 +240,13 @@ class _HeroSectionState extends State<HeroSection>
               mainAxisAlignment: MainAxisAlignment.center,
               children: List.generate(
                 _imagePaths.length,
-                (index) => Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 4),
-                  width: 12,
+                (index) => AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  margin: const EdgeInsets.symmetric(horizontal: 8),
+                  width: _currentIndex == index ? 50 : 12,
                   height: 12,
                   decoration: BoxDecoration(
-                    shape: BoxShape.circle,
+                    borderRadius: BorderRadius.circular(6),
                     color: _currentIndex == index
                         ? Colors.white
                         : Colors.white.withValues(alpha: 0.5),
