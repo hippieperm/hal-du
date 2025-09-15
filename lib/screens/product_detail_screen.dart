@@ -61,9 +61,16 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             child: Column(
               children: [
                 const SizedBox(height: 100),
-                _buildProductDetailSection(),
-                _buildEnglishLearningSection(),
-                _buildProductInfoSection(),
+                Padding(
+                  padding: EdgeInsetsGeometry.symmetric(horizontal: 350),
+                  child: Column(
+                    children: [
+                      _buildProductDetailSection(),
+                      _buildEnglishLearningSection(),
+                      _buildProductInfoSection(),
+                    ],
+                  ),
+                ),
                 const FooterWidget(),
               ],
             ),
@@ -132,7 +139,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(6),
                           border: Border.all(
-                            color: isSelected ? const Color(0xFF2ECC71) : Colors.grey[300]!,
+                            color: isSelected
+                                ? const Color(0xFF2ECC71)
+                                : Colors.grey[300]!,
                             width: 2,
                           ),
                           image: DecorationImage(
@@ -166,7 +175,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         color: Colors.grey[600],
                       ),
                     ),
-                    const Icon(Icons.chevron_right, size: 16, color: Colors.grey),
+                    const Icon(Icons.chevron_right,
+                        size: 16, color: Colors.grey),
                     Text(
                       '나눔시장',
                       style: GoogleFonts.notoSans(
@@ -418,7 +428,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             ),
           ),
           const SizedBox(height: 30),
-
           _buildInfoTable(),
         ],
       ),
@@ -431,8 +440,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       ['판매가격', '82,000원'],
       ['상품 택배비용', '무료배송'],
       ['상품 추가 정보', '할두에서만 만날 수 있는 특별한 내용들로 구성 시간 분당 타입이 없는 무제한'],
-      ['상품에 대한 상세 정보', '할두 도서로 구성된 3권 책자를 바탕으로 다양한 인생 첫 시작을 만들어 나갈 수 있는 내용입니다. 책자와 부교재를 통해 즐겁고 의미있는 시간을 보낼 수 있습니다.'],
-      ['상품의 취급 상세 내용', '1. 공정거래 위원회가 정하는 소비자 분쟁 해결기준에 의해 교환, 환불이 가능합니다.\n2. 상품에 하자가 있을 경우 구매일로부터 30일 이내에 교환, 환불이 가능합니다.\n3. 고객 변심으로 인한 취소의 경우 7일 이내에 취소 접수를 해주셔야 합니다.\n4. 단순 변심 취소의 경우 실제 출고 후 왕복 DHL GHL 착불, 배송료가 부과됩니다.\n5. 특수 케이스의 주문상품은 제작기간이 소요될 수 있으며, 주문 시점에 안내 드립니다.\n6. 개인의 사정으로 인한 일방적인 주문취소로 인하여 발생하는 손해는 고객이 부담합니다.'],
+      [
+        '상품에 대한 상세 정보',
+        '할두 도서로 구성된 3권 책자를 바탕으로 다양한 인생 첫 시작을 만들어 나갈 수 있는 내용입니다. 책자와 부교재를 통해 즐겁고 의미있는 시간을 보낼 수 있습니다.'
+      ],
+      [
+        '상품의 취급 상세 내용',
+        '1. 공정거래 위원회가 정하는 소비자 분쟁 해결기준에 의해 교환, 환불이 가능합니다.\n2. 상품에 하자가 있을 경우 구매일로부터 30일 이내에 교환, 환불이 가능합니다.\n3. 고객 변심으로 인한 취소의 경우 7일 이내에 취소 접수를 해주셔야 합니다.\n4. 단순 변심 취소의 경우 실제 출고 후 왕복 DHL GHL 착불, 배송료가 부과됩니다.\n5. 특수 케이스의 주문상품은 제작기간이 소요될 수 있으며, 주문 시점에 안내 드립니다.\n6. 개인의 사정으로 인한 일방적인 주문취소로 인하여 발생하는 손해는 고객이 부담합니다.'
+      ],
     ];
 
     return Column(
