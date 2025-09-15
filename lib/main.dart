@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'screens/home_screen.dart';
+import 'screens/about_screen.dart';
+import 'screens/contents_screen.dart';
+import 'screens/shop_screen.dart';
 
 void main() {
   runApp(const HaldoApp());
@@ -19,6 +22,11 @@ class HaldoApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: const HomeScreen(),
+      routes: {
+        '/about': (context) => const AboutScreen(),
+        '/contents': (context) => const ContentsScreen(),
+        '/shop': (context) => const ShopScreen(),
+      },
       debugShowCheckedModeBanner: false,
     );
   }
