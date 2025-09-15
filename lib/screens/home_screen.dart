@@ -55,9 +55,6 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Column(
               children: [
                 const HeroSection(),
-                const AboutSection(),
-                const ContentsSection(),
-                const ShopSection(),
                 const FooterWidget(),
               ],
             ),
