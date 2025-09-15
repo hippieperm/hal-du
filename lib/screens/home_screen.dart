@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/app_bar_widget.dart';
 import '../widgets/hero_section.dart';
-import '../widgets/about_section.dart';
-import '../widgets/contents_section.dart';
-import '../widgets/shop_section.dart';
 import '../widgets/footer_widget.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -38,9 +35,16 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+    if (index == 0) {
+      // ABOUT 페이지로 이동
+      Navigator.pushNamed(context, '/about');
+    } else if (index == 1) {
+      // CONTENTS 페이지로 이동
+      Navigator.pushNamed(context, '/contents');
+    } else if (index == 2) {
+      // SHOP 페이지로 이동
+      Navigator.pushNamed(context, '/shop');
+    }
   }
 
   @override
