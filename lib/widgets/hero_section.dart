@@ -8,10 +8,12 @@ class HeroSection extends StatefulWidget {
   State<HeroSection> createState() => _HeroSectionState();
 }
 
-class _HeroSectionState extends State<HeroSection> {
-  final PageController _pageController = PageController();
+class _HeroSectionState extends State<HeroSection>
+    with SingleTickerProviderStateMixin {
   int _currentIndex = 0;
   late List<String> _imagePaths;
+  AnimationController? _animationController;
+  Animation<double>? _fadeAnimation;
 
   @override
   void initState() {
@@ -22,18 +24,31 @@ class _HeroSectionState extends State<HeroSection> {
       'assets/images/hero_image_2.jpg',
     ];
 
-    // 자동 슬라이드 시작
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 800),
+      vsync: this,
+    );
+
+    _fadeAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: _animationController!,
+      curve: Curves.easeInOut,
+    ));
+
+    _animationController!.forward();
     _startAutoSlide();
   }
 
   @override
   void dispose() {
-    _pageController.dispose();
+    _animationController?.dispose();
     super.dispose();
   }
 
   void _startAutoSlide() {
-    Future.delayed(const Duration(seconds: 3), () {
+    Future.delayed(const Duration(seconds: 4), () {
       if (mounted) {
         _nextImage();
         _startAutoSlide();
@@ -41,13 +56,13 @@ class _HeroSectionState extends State<HeroSection> {
     });
   }
 
-  void _nextImage() {
-    if (_pageController.hasClients) {
-      _pageController.nextPage(
-        duration: const Duration(milliseconds: 500),
-        curve: Curves.easeInOut,
-      );
-    }
+  void _nextImage() async {
+    _animationController?.reverse().then((_) {
+      setState(() {
+        _currentIndex = (_currentIndex + 1) % _imagePaths.length;
+      });
+      _animationController?.forward();
+    });
   }
 
   @override
@@ -57,37 +72,68 @@ class _HeroSectionState extends State<HeroSection> {
       height: MediaQuery.of(context).size.height,
       child: Stack(
         children: [
-          // 이미지 슬라이더
-          PageView.builder(
-            controller: _pageController,
-            onPageChanged: (index) {
-              setState(() {
-                _currentIndex = index;
-              });
-            },
-            itemCount: _imagePaths.length,
-            itemBuilder: (context, index) {
-              return Container(
-                width: double.infinity,
-                height: double.infinity,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage(_imagePaths[index]),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                child: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Colors.black.withOpacity(0.3),
-                        Colors.black.withOpacity(0.6),
-                      ],
+          // 배경 이미지 with fade animation
+          AnimatedBuilder(
+            animation: _fadeAnimation ?? const AlwaysStoppedAnimation(1.0),
+            builder: (context, child) {
+              return Stack(
+                fit: StackFit.expand,
+                children: [
+                  // 이전 이미지 (페이드 아웃)
+                  if (_currentIndex > 0)
+                    Opacity(
+                      opacity: 1.0 - (_fadeAnimation?.value ?? 1.0),
+                      child: Image.asset(
+                        _imagePaths[(_currentIndex - 1) % _imagePaths.length],
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            color: Colors.grey[800],
+                            child: const Center(
+                              child: Icon(
+                                Icons.image_not_supported,
+                                color: Colors.white54,
+                                size: 50,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  // 현재 이미지 (페이드 인)
+                  Opacity(
+                    opacity: _fadeAnimation?.value ?? 1.0,
+                    child: Image.asset(
+                      _imagePaths[_currentIndex],
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Container(
+                          color: Colors.grey[800],
+                          child: const Center(
+                            child: Icon(
+                              Icons.image_not_supported,
+                              color: Colors.white54,
+                              size: 50,
+                            ),
+                          ),
+                        );
+                      },
                     ),
                   ),
-                ),
+                  // 오버레이 그래디언트
+                  Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.black.withValues(alpha: 0.3),
+                          Colors.black.withValues(alpha: 0.6),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               );
             },
           ),
@@ -109,7 +155,7 @@ class _HeroSectionState extends State<HeroSection> {
                       Shadow(
                         offset: const Offset(0, 2),
                         blurRadius: 4,
-                        color: Colors.black.withOpacity(0.5),
+                        color: Colors.black.withValues(alpha: 0.5),
                       ),
                     ],
                   ),
@@ -129,7 +175,7 @@ class _HeroSectionState extends State<HeroSection> {
                       Shadow(
                         offset: const Offset(0, 1),
                         blurRadius: 2,
-                        color: Colors.black.withOpacity(0.5),
+                        color: Colors.black.withValues(alpha: 0.5),
                       ),
                     ],
                   ),
@@ -148,7 +194,7 @@ class _HeroSectionState extends State<HeroSection> {
                       Shadow(
                         offset: const Offset(0, 1),
                         blurRadius: 2,
-                        color: Colors.black.withOpacity(0.5),
+                        color: Colors.black.withValues(alpha: 0.5),
                       ),
                     ],
                   ),
@@ -202,7 +248,7 @@ class _HeroSectionState extends State<HeroSection> {
                     shape: BoxShape.circle,
                     color: _currentIndex == index
                         ? Colors.white
-                        : Colors.white.withOpacity(0.5),
+                        : Colors.white.withValues(alpha: 0.5),
                   ),
                 ),
               ),
