@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'signup_dialog.dart';
 
 class AppBarWidget extends StatefulWidget {
   final int selectedIndex;
@@ -100,7 +101,12 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                 ),
                 const SizedBox(width: 12),
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) => const SignupDialog(),
+                    );
+                  },
                   child: Text(
                     '회원가입',
                     style: GoogleFonts.notoSans(
