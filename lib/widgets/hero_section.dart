@@ -233,15 +233,15 @@ class _HeroSectionState extends State<HeroSection>
                     ),
                   ),
 
-                // Overlay gradient
+                // Light overlay for better text readability
                 Container(
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       colors: [
+                        Colors.black.withValues(alpha: 0.1),
                         Colors.black.withValues(alpha: 0.3),
-                        Colors.black.withValues(alpha: 0.6),
                       ],
                     ),
                   ),
@@ -250,93 +250,48 @@ class _HeroSectionState extends State<HeroSection>
             ),
           ),
 
-          // 콘텐츠 오버레이
-          Center(
+          // 콘텐츠 오버레이 - 스크린샷과 동일한 레이아웃
+          Positioned(
+            left: 0,
+            right: 0,
+            top: MediaQuery.of(context).size.height * 0.35,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // 메인 타이틀
+                // 대형 녹색 haldo 브랜드명
                 Text(
-                  '건강한 인생 2막, 할두와 함께 해요!',
-                  style: GoogleFonts.notoSans(
-                    fontSize: MediaQuery.of(context).size.width > 768 ? 48 : 32,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    height: 1.2,
-                    shadows: [
-                      Shadow(
-                        offset: const Offset(0, 2),
-                        blurRadius: 4,
-                        color: Colors.black.withValues(alpha: 0.5),
-                      ),
-                    ],
+                  'haldo',
+                  style: GoogleFonts.inter(
+                    fontSize: MediaQuery.of(context).size.width > 768 ? 120 : 80,
+                    fontWeight: FontWeight.w900,
+                    color: const Color(0xFF00C853), // 밝은 녹색
+                    letterSpacing: -2,
+                    height: 0.8,
                   ),
                   textAlign: TextAlign.center,
                 ),
 
                 const SizedBox(height: 20),
 
-                // 서브 타이틀
-                Text(
-                  '할머니가 되어서도 두근두근',
-                  style: GoogleFonts.notoSans(
-                    fontSize: MediaQuery.of(context).size.width > 768 ? 24 : 18,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.pink[200],
-                    shadows: [
-                      Shadow(
-                        offset: const Offset(0, 1),
-                        blurRadius: 2,
-                        color: Colors.black.withValues(alpha: 0.5),
-                      ),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(height: 10),
-
-                // 브랜드명
-                Text(
-                  '할두 haldo 있다!',
-                  style: GoogleFonts.notoSans(
-                    fontSize: MediaQuery.of(context).size.width > 768 ? 28 : 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.pink[100],
-                    shadows: [
-                      Shadow(
-                        offset: const Offset(0, 1),
-                        blurRadius: 2,
-                        color: Colors.black.withValues(alpha: 0.5),
-                      ),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(height: 40),
-
-                // CTA 버튼
-                ElevatedButton(
-                  onPressed: () {
-                    // 액션 추가
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.pink[600],
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 40,
-                      vertical: 16,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    elevation: 8,
-                  ),
+                // 메인 슬로건
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
                   child: Text(
-                    '지금 시작하기',
+                    '건강한 인생 2막, 할두와 함께해요!',
                     style: GoogleFonts.notoSans(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
+                      fontSize: MediaQuery.of(context).size.width > 768 ? 36 : 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      height: 1.3,
+                      shadows: [
+                        Shadow(
+                          offset: const Offset(0, 2),
+                          blurRadius: 8,
+                          color: Colors.black.withValues(alpha: 0.5),
+                        ),
+                      ],
                     ),
+                    textAlign: TextAlign.center,
                   ),
                 ),
               ],
