@@ -13,8 +13,8 @@ class _HeroSectionState extends State<HeroSection>
     with SingleTickerProviderStateMixin {
   int _currentIndex = 0;
   late List<String> _imagePaths;
-  AnimationController? _animationController;
-  Animation<double>? _fadeAnimation;
+  late AnimationController _fadeController;
+  late Animation<double> _fadeAnimation;
 
   // Drag functionality
   bool _isDragging = false;
@@ -32,7 +32,8 @@ class _HeroSectionState extends State<HeroSection>
       'assets/images/grandmother.jpg',
     ];
 
-    _animationController = AnimationController(
+    // Initialize fade animation controller
+    _fadeController = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
     );
@@ -41,17 +42,18 @@ class _HeroSectionState extends State<HeroSection>
       begin: 0.0,
       end: 1.0,
     ).animate(CurvedAnimation(
-      parent: _animationController!,
+      parent: _fadeController,
       curve: Curves.easeInOut,
     ));
 
-    _animationController!.forward();
+    // Start with first image visible
+    _fadeController.forward();
     _startAutoSlide();
   }
 
   @override
   void dispose() {
-    _animationController?.dispose();
+    _fadeController.dispose();
     super.dispose();
   }
 
@@ -67,25 +69,34 @@ class _HeroSectionState extends State<HeroSection>
   void _nextImage() async {
     if (_isDragging) return;
 
-    _animationController?.reverse().then((_) {
-      setState(() {
-        _currentIndex = (_currentIndex + 1) % _imagePaths.length;
-        _dragOffset = 0.0; // Reset drag offset
-      });
-      _animationController?.forward();
+    // Fade out current image
+    await _fadeController.reverse();
+
+    // Change to next image
+    setState(() {
+      _currentIndex = (_currentIndex + 1) % _imagePaths.length;
+      _dragOffset = 0.0; // Reset drag offset
     });
+
+    // Fade in new image
+    _fadeController.forward();
   }
 
   void _previousImage() async {
     if (_isDragging) return;
 
-    _animationController?.reverse().then((_) {
-      setState(() {
-        _currentIndex = (_currentIndex - 1 + _imagePaths.length) % _imagePaths.length;
-        _dragOffset = 0.0; // Reset drag offset
-      });
-      _animationController?.forward();
+    // Fade out current image
+    await _fadeController.reverse();
+
+    // Change to previous image
+    setState(() {
+      _currentIndex =
+          (_currentIndex - 1 + _imagePaths.length) % _imagePaths.length;
+      _dragOffset = 0.0; // Reset drag offset
     });
+
+    // Fade in new image
+    _fadeController.forward();
   }
 
   @override
@@ -102,7 +113,8 @@ class _HeroSectionState extends State<HeroSection>
               _dragStartY = details.localPosition.dy;
               _dragOffset = 0.0;
               _isHorizontalDrag = false;
-              _animationController?.stop();
+              // Pause fade animation during drag
+              _fadeController.stop();
             },
             onPanUpdate: (details) {
               final deltaX = details.localPosition.dx - _dragStartX;
@@ -110,7 +122,8 @@ class _HeroSectionState extends State<HeroSection>
 
               // Determine if this is a horizontal drag (30° threshold)
               if (!_isHorizontalDrag && !_isDragging) {
-                final angle = math.atan2(deltaY.abs(), deltaX.abs()) * 180 / math.pi;
+                final angle =
+                    math.atan2(deltaY.abs(), deltaX.abs()) * 180 / math.pi;
                 if (angle < 30) {
                   setState(() {
                     _isHorizontalDrag = true;
@@ -140,7 +153,8 @@ class _HeroSectionState extends State<HeroSection>
               });
 
               // Determine if we should change pages
-              if (velocity.abs() > 500 || _dragOffset.abs() > screenWidth * 0.3) {
+              if (velocity.abs() > 500 ||
+                  _dragOffset.abs() > screenWidth * 0.3) {
                 if (velocity < 0 || _dragOffset < 0) {
                   // Swipe left - next image
                   _nextImage();
@@ -153,7 +167,10 @@ class _HeroSectionState extends State<HeroSection>
                 setState(() {
                   _dragOffset = 0.0;
                 });
-                _animationController?.forward();
+                // Resume fade animation if not at full opacity
+                if (_fadeAnimation.value < 1.0) {
+                  _fadeController.forward();
+                }
               }
 
               // Resume auto-slide
@@ -162,33 +179,42 @@ class _HeroSectionState extends State<HeroSection>
             child: Stack(
               fit: StackFit.expand,
               children: [
-                // Current image
-                Transform.translate(
-                  offset: Offset(_dragOffset, 0),
-                  child: Image.asset(
-                    _imagePaths[_currentIndex],
-                    fit: BoxFit.cover,
-                    width: double.infinity,
-                    height: double.infinity,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Container(
-                        color: Colors.grey[800],
-                        child: const Center(
-                          child: Icon(
-                            Icons.image_not_supported,
-                            color: Colors.white54,
-                            size: 50,
-                          ),
+                // Current image with fade animation
+                AnimatedBuilder(
+                  animation: _fadeAnimation,
+                  builder: (context, child) {
+                    return Transform.translate(
+                      offset: Offset(_dragOffset, 0),
+                      child: Opacity(
+                        opacity: _fadeAnimation.value,
+                        child: Image.asset(
+                          _imagePaths[_currentIndex],
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                          height: double.infinity,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Container(
+                              color: Colors.grey[800],
+                              child: const Center(
+                                child: Icon(
+                                  Icons.image_not_supported,
+                                  color: Colors.white54,
+                                  size: 50,
+                                ),
+                              ),
+                            );
+                          },
                         ),
-                      );
-                    },
-                  ),
+                      ),
+                    );
+                  },
                 ),
 
                 // Next image (right side)
                 if (_dragOffset < 0)
                   Transform.translate(
-                    offset: Offset(MediaQuery.of(context).size.width + _dragOffset, 0),
+                    offset: Offset(
+                        MediaQuery.of(context).size.width + _dragOffset, 0),
                     child: Image.asset(
                       _imagePaths[(_currentIndex + 1) % _imagePaths.length],
                       fit: BoxFit.cover,
@@ -212,9 +238,11 @@ class _HeroSectionState extends State<HeroSection>
                 // Previous image (left side)
                 if (_dragOffset > 0)
                   Transform.translate(
-                    offset: Offset(-MediaQuery.of(context).size.width + _dragOffset, 0),
+                    offset: Offset(
+                        -MediaQuery.of(context).size.width + _dragOffset, 0),
                     child: Image.asset(
-                      _imagePaths[(_currentIndex - 1 + _imagePaths.length) % _imagePaths.length],
+                      _imagePaths[(_currentIndex - 1 + _imagePaths.length) %
+                          _imagePaths.length],
                       fit: BoxFit.cover,
                       width: double.infinity,
                       height: double.infinity,
@@ -250,7 +278,7 @@ class _HeroSectionState extends State<HeroSection>
             ),
           ),
 
-          // 콘텐츠 오버레이 - 스크린샷과 동일한 레이아웃
+          // 콘텐츠 오버레이 - 슬라이드별 다른 텍스트
           Positioned(
             left: 0,
             right: 0,
@@ -258,42 +286,194 @@ class _HeroSectionState extends State<HeroSection>
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // 대형 녹색 haldo 브랜드명
-                Text(
-                  'haldo',
-                  style: GoogleFonts.inter(
-                    fontSize: MediaQuery.of(context).size.width > 768 ? 120 : 80,
-                    fontWeight: FontWeight.w900,
-                    color: const Color(0xFF00C853), // 밝은 녹색
-                    letterSpacing: -2,
-                    height: 0.8,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
+                if (_currentIndex == 2) ...[
+                  // 3번째 슬라이드 - 특별한 텍스트
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    child: Column(
+                      children: [
+                        // 첫 번째 줄: "할머니가 되어서도 두근두근"
+                        RichText(
+                          textAlign: TextAlign.center,
+                          text: TextSpan(
+                            children: [
+                              TextSpan(
+                                text: '할',
+                                style: GoogleFonts.notoSans(
+                                  fontSize:
+                                      MediaQuery.of(context).size.width > 768
+                                          ? 48
+                                          : 32,
+                                  fontWeight: FontWeight.bold,
+                                  color: const Color(0xFF00C853), // 밝은 녹색
+                                  height: 1.2,
+                                  shadows: [
+                                    Shadow(
+                                      offset: const Offset(0, 2),
+                                      blurRadius: 8,
+                                      color:
+                                          Colors.black.withValues(alpha: 0.5),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              TextSpan(
+                                text: '머니가 되어서도 ',
+                                style: GoogleFonts.notoSans(
+                                  fontSize:
+                                      MediaQuery.of(context).size.width > 768
+                                          ? 48
+                                          : 32,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  height: 1.2,
+                                  shadows: [
+                                    Shadow(
+                                      offset: const Offset(0, 2),
+                                      blurRadius: 8,
+                                      color:
+                                          Colors.black.withValues(alpha: 0.5),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
 
-                const SizedBox(height: 20),
+                        const SizedBox(height: 20),
 
-                // 메인 슬로건
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
-                  child: Text(
-                    '건강한 인생 2막, 할두와 함께해요!',
-                    style: GoogleFonts.notoSans(
-                      fontSize: MediaQuery.of(context).size.width > 768 ? 36 : 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      height: 1.3,
-                      shadows: [
-                        Shadow(
-                          offset: const Offset(0, 2),
-                          blurRadius: 8,
-                          color: Colors.black.withValues(alpha: 0.5),
+                        // 두 번째 줄: "할두 haldo 있다!"
+                        RichText(
+                          textAlign: TextAlign.center,
+                          text: TextSpan(
+                            children: [
+                              TextSpan(
+                                text: '두',
+                                style: GoogleFonts.notoSans(
+                                  fontSize:
+                                      MediaQuery.of(context).size.width > 768
+                                          ? 48
+                                          : 32,
+                                  fontWeight: FontWeight.bold,
+                                  color: const Color(0xFF00C853), // 밝은 녹색
+                                  height: 1.2,
+                                  shadows: [
+                                    Shadow(
+                                      offset: const Offset(0, 2),
+                                      blurRadius: 8,
+                                      color:
+                                          Colors.black.withValues(alpha: 0.5),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              TextSpan(
+                                text: '근두근 할두 ',
+                                style: GoogleFonts.notoSans(
+                                  fontSize:
+                                      MediaQuery.of(context).size.width > 768
+                                          ? 48
+                                          : 32,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  height: 1.2,
+                                  shadows: [
+                                    Shadow(
+                                      offset: const Offset(0, 2),
+                                      blurRadius: 8,
+                                      color:
+                                          Colors.black.withValues(alpha: 0.5),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              TextSpan(
+                                text: 'haldo ',
+                                style: GoogleFonts.notoSans(
+                                  fontSize:
+                                      MediaQuery.of(context).size.width > 768
+                                          ? 48
+                                          : 32,
+                                  fontWeight: FontWeight.bold,
+                                  color: const Color(0xFF00C853), // 밝은 녹색
+                                  height: 1.2,
+                                  shadows: [
+                                    Shadow(
+                                      offset: const Offset(0, 2),
+                                      blurRadius: 8,
+                                      color:
+                                          Colors.black.withValues(alpha: 0.5),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              TextSpan(
+                                text: '있다!',
+                                style: GoogleFonts.notoSans(
+                                  fontSize:
+                                      MediaQuery.of(context).size.width > 768
+                                          ? 48
+                                          : 32,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  height: 1.2,
+                                  shadows: [
+                                    Shadow(
+                                      offset: const Offset(0, 2),
+                                      blurRadius: 8,
+                                      color:
+                                          Colors.black.withValues(alpha: 0.5),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
+                  ),
+                ] else if (_currentIndex != 1) ...[
+                  // 1번째 슬라이드 - 기본 텍스트
+                  Text(
+                    'haldo',
+                    style: GoogleFonts.inter(
+                      fontSize:
+                          MediaQuery.of(context).size.width > 768 ? 120 : 80,
+                      fontWeight: FontWeight.w900,
+                      color: const Color(0xFF00C853), // 밝은 녹색
+                      letterSpacing: -2,
+                      height: 0.8,
+                    ),
                     textAlign: TextAlign.center,
                   ),
-                ),
+
+                  const SizedBox(height: 20),
+
+                  // 메인 슬로건
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    child: Text(
+                      '건강한 인생 2막, 할두와 함께해요!',
+                      style: GoogleFonts.notoSans(
+                        fontSize:
+                            MediaQuery.of(context).size.width > 768 ? 36 : 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        height: 1.3,
+                        shadows: [
+                          Shadow(
+                            offset: const Offset(0, 2),
+                            blurRadius: 8,
+                            color: Colors.black.withValues(alpha: 0.5),
+                          ),
+                        ],
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ],
               ],
             ),
           ),
