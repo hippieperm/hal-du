@@ -12,7 +12,7 @@ class ContentsScreen extends StatefulWidget {
 
 class _ContentsScreenState extends State<ContentsScreen> {
   final ScrollController _scrollController = ScrollController();
-  bool _isAppBarTransparent = true;
+  bool _isAppBarTransparent = false; // 콘텐츠 페이지에서는 항상 불투명
   String _selectedCategory = '전체';
 
   final List<String> _categories = ['전체', '멤버', '꿀팁', '클럽', '아이템'];
@@ -32,7 +32,7 @@ class _ContentsScreenState extends State<ContentsScreen> {
 
   void _onScroll() {
     setState(() {
-      _isAppBarTransparent = _scrollController.offset < 50;
+      _isAppBarTransparent = false; // 콘텐츠 페이지에서는 항상 불투명
     });
   }
 
@@ -60,6 +60,7 @@ class _ContentsScreenState extends State<ContentsScreen> {
             controller: _scrollController,
             child: Column(
               children: [
+                SizedBox(height: 100),
                 _buildHeroSection(),
                 _buildContentsSection(),
                 const FooterWidget(),
@@ -88,7 +89,7 @@ class _ContentsScreenState extends State<ContentsScreen> {
 
   Widget _buildHeroSection() {
     return Container(
-      height: 180,
+      height: 110,
       width: double.infinity,
       color: Colors.white,
       child: Center(
@@ -107,7 +108,7 @@ class _ContentsScreenState extends State<ContentsScreen> {
   Widget _buildContentsSection() {
     return Center(
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 40),
+        padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 20),
         constraints: const BoxConstraints(maxWidth: 1200),
         child: Column(
           children: [
@@ -148,10 +149,13 @@ class _ContentsScreenState extends State<ContentsScreen> {
                   vertical: isSelected ? 10 : 8,
                 ),
                 decoration: BoxDecoration(
-                  color: isSelected ? const Color(0xFF2ECC71) : Colors.transparent,
+                  color:
+                      isSelected ? const Color(0xFF2ECC71) : Colors.transparent,
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
-                    color: isSelected ? const Color(0xFF2ECC71) : Colors.grey[400]!,
+                    color: isSelected
+                        ? const Color(0xFF2ECC71)
+                        : Colors.grey[400]!,
                     width: 1,
                   ),
                 ),
@@ -175,8 +179,11 @@ class _ContentsScreenState extends State<ContentsScreen> {
     return GridView.count(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      crossAxisCount: MediaQuery.of(context).size.width > 1200 ? 4 :
-                      MediaQuery.of(context).size.width > 768 ? 3 : 2,
+      crossAxisCount: MediaQuery.of(context).size.width > 1200
+          ? 4
+          : MediaQuery.of(context).size.width > 768
+              ? 3
+              : 2,
       crossAxisSpacing: 20,
       mainAxisSpacing: 30,
       childAspectRatio: 0.75,
@@ -334,10 +341,13 @@ class _ContentsScreenState extends State<ContentsScreen> {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 8, vertical: 3),
                         decoration: BoxDecoration(
-                          color: category == '클럽' ? const Color(0xFF2ECC71).withValues(alpha: 0.15) :
-                                 category == '꿀팁' ? Colors.orange.withValues(alpha: 0.15) :
-                                 category == '멤버' ? Colors.blue.withValues(alpha: 0.15) :
-                                 Colors.purple.withValues(alpha: 0.15),
+                          color: category == '클럽'
+                              ? const Color(0xFF2ECC71).withValues(alpha: 0.15)
+                              : category == '꿀팁'
+                                  ? Colors.orange.withValues(alpha: 0.15)
+                                  : category == '멤버'
+                                      ? Colors.blue.withValues(alpha: 0.15)
+                                      : Colors.purple.withValues(alpha: 0.15),
                           borderRadius: BorderRadius.circular(4),
                         ),
                         child: Text(
@@ -345,10 +355,13 @@ class _ContentsScreenState extends State<ContentsScreen> {
                           style: GoogleFonts.notoSans(
                             fontSize: 10,
                             fontWeight: FontWeight.w500,
-                            color: category == '클럽' ? const Color(0xFF2ECC71) :
-                                   category == '꿀팁' ? Colors.orange[700] :
-                                   category == '멤버' ? Colors.blue[700] :
-                                   Colors.purple[700],
+                            color: category == '클럽'
+                                ? const Color(0xFF2ECC71)
+                                : category == '꿀팁'
+                                    ? Colors.orange[700]
+                                    : category == '멤버'
+                                        ? Colors.blue[700]
+                                        : Colors.purple[700],
                           ),
                         ),
                       ),

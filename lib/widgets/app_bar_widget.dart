@@ -50,13 +50,14 @@ class _AppBarWidgetState extends State<AppBarWidget> {
             MouseRegion(
               cursor: SystemMouseCursors.click,
               child: GestureDetector(
-                onTap: widget.onLogoTapped ?? () {
-                  // 기본 동작: 홈으로 이동
-                  Navigator.of(context).pushNamedAndRemoveUntil(
-                    '/',
-                    (route) => false,
-                  );
-                },
+                onTap: widget.onLogoTapped ??
+                    () {
+                      // 기본 동작: 홈으로 이동
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                        '/',
+                        (route) => false,
+                      );
+                    },
                 child: Text(
                   '할두',
                   style: GoogleFonts.notoSans(
@@ -92,7 +93,7 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                     style: GoogleFonts.notoSans(
                       color: widget.isTransparent
                           ? Colors.white.withValues(alpha: 0.9)
-                          : Colors.grey[700],
+                          : Colors.black87,
                       fontSize: 16,
                     ),
                   ),
@@ -103,9 +104,8 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                   child: Text(
                     '회원가입',
                     style: GoogleFonts.notoSans(
-                      color: widget.isTransparent
-                          ? Colors.white
-                          : Colors.grey[700],
+                      color:
+                          widget.isTransparent ? Colors.white : Colors.black87,
                       fontSize: 14,
                     ),
                   ),
@@ -117,9 +117,8 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                   child: Text(
                     '장바구니',
                     style: GoogleFonts.notoSans(
-                      color: widget.isTransparent
-                          ? Colors.white
-                          : Colors.grey[700],
+                      color:
+                          widget.isTransparent ? Colors.white : Colors.black87,
                       fontSize: 14,
                     ),
                   ),
@@ -133,7 +132,8 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                     },
                     icon: Icon(
                       Icons.menu,
-                      color: widget.isTransparent ? Colors.white : Colors.grey,
+                      color:
+                          widget.isTransparent ? Colors.white : Colors.black87,
                     ),
                   ),
               ],
@@ -164,9 +164,7 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                       ? (widget.selectedIndex == 0
                           ? Colors.white
                           : Colors.white.withValues(alpha: 0.9))
-                      : (widget.selectedIndex == 0
-                          ? Colors.pink[600]
-                          : Colors.grey[700]),
+                      : Colors.black87,
             ),
           ),
         ),
@@ -194,9 +192,7 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                       ? (widget.selectedIndex == 1
                           ? Colors.white
                           : Colors.white.withValues(alpha: 0.9))
-                      : (widget.selectedIndex == 1
-                          ? Colors.pink[600]
-                          : Colors.grey[700]),
+                      : Colors.black87,
             ),
           ),
         ),
@@ -224,14 +220,11 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                       ? (widget.selectedIndex == 2
                           ? Colors.white
                           : Colors.white.withValues(alpha: 0.9))
-                      : (widget.selectedIndex == 2
-                          ? Colors.pink[600]
-                          : Colors.grey[700]),
+                      : Colors.black87,
             ),
           ),
         ),
       ),
     );
   }
-
 }
