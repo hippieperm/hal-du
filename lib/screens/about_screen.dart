@@ -12,7 +12,7 @@ class AboutScreen extends StatefulWidget {
 
 class _AboutScreenState extends State<AboutScreen> {
   final ScrollController _scrollController = ScrollController();
-  bool _isAppBarTransparent = true;
+  bool _isAppBarTransparent = false;
 
   @override
   void initState() {
