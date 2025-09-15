@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'dart:math' as math;
 
 class HeroSection extends StatefulWidget {
   const HeroSection({super.key});
@@ -14,6 +15,13 @@ class _HeroSectionState extends State<HeroSection>
   late List<String> _imagePaths;
   AnimationController? _animationController;
   Animation<double>? _fadeAnimation;
+
+  // Drag functionality
+  bool _isDragging = false;
+  bool _isHorizontalDrag = false;
+  double _dragStartX = 0.0;
+  double _dragStartY = 0.0;
+  double _dragOffset = 0.0;
 
   @override
   void initState() {
@@ -57,9 +65,24 @@ class _HeroSectionState extends State<HeroSection>
   }
 
   void _nextImage() async {
+    if (_isDragging) return;
+
     _animationController?.reverse().then((_) {
       setState(() {
         _currentIndex = (_currentIndex + 1) % _imagePaths.length;
+        _dragOffset = 0.0; // Reset drag offset
+      });
+      _animationController?.forward();
+    });
+  }
+
+  void _previousImage() async {
+    if (_isDragging) return;
+
+    _animationController?.reverse().then((_) {
+      setState(() {
+        _currentIndex = (_currentIndex - 1 + _imagePaths.length) % _imagePaths.length;
+        _dragOffset = 0.0; // Reset drag offset
       });
       _animationController?.forward();
     });
@@ -72,40 +95,105 @@ class _HeroSectionState extends State<HeroSection>
       height: MediaQuery.of(context).size.height,
       child: Stack(
         children: [
-          // 배경 이미지 with fade animation
-          AnimatedBuilder(
-            animation: _fadeAnimation ?? const AlwaysStoppedAnimation(1.0),
-            builder: (context, child) {
-              return Stack(
-                fit: StackFit.expand,
-                children: [
-                  // 이전 이미지 (페이드 아웃)
-                  if (_currentIndex > 0)
-                    Opacity(
-                      opacity: 1.0 - (_fadeAnimation?.value ?? 1.0),
-                      child: Image.asset(
-                        _imagePaths[(_currentIndex - 1) % _imagePaths.length],
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
-                            color: Colors.grey[800],
-                            child: const Center(
-                              child: Icon(
-                                Icons.image_not_supported,
-                                color: Colors.white54,
-                                size: 50,
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  // 현재 이미지 (페이드 인)
-                  Opacity(
-                    opacity: _fadeAnimation?.value ?? 1.0,
+          // Continuous sliding images with drag support
+          GestureDetector(
+            onPanStart: (details) {
+              _dragStartX = details.localPosition.dx;
+              _dragStartY = details.localPosition.dy;
+              _dragOffset = 0.0;
+              _isHorizontalDrag = false;
+              _animationController?.stop();
+            },
+            onPanUpdate: (details) {
+              final deltaX = details.localPosition.dx - _dragStartX;
+              final deltaY = details.localPosition.dy - _dragStartY;
+
+              // Determine if this is a horizontal drag (30° threshold)
+              if (!_isHorizontalDrag && !_isDragging) {
+                final angle = math.atan2(deltaY.abs(), deltaX.abs()) * 180 / math.pi;
+                if (angle < 30) {
+                  setState(() {
+                    _isHorizontalDrag = true;
+                    _isDragging = true;
+                  });
+                } else if (deltaY.abs() > 10) {
+                  return; // Allow vertical scrolling
+                }
+              }
+
+              // Update drag offset for continuous sliding
+              if (_isHorizontalDrag && _isDragging) {
+                setState(() {
+                  _dragOffset = deltaX;
+                });
+              }
+            },
+            onPanEnd: (details) {
+              if (!_isHorizontalDrag) return;
+
+              final velocity = details.velocity.pixelsPerSecond.dx;
+              final screenWidth = MediaQuery.of(context).size.width;
+
+              setState(() {
+                _isDragging = false;
+                _isHorizontalDrag = false;
+              });
+
+              // Determine if we should change pages
+              if (velocity.abs() > 500 || _dragOffset.abs() > screenWidth * 0.3) {
+                if (velocity < 0 || _dragOffset < 0) {
+                  // Swipe left - next image
+                  _nextImage();
+                } else {
+                  // Swipe right - previous image
+                  _previousImage();
+                }
+              } else {
+                // Snap back to current image
+                setState(() {
+                  _dragOffset = 0.0;
+                });
+                _animationController?.forward();
+              }
+
+              // Resume auto-slide
+              _startAutoSlide();
+            },
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                // Current image
+                Transform.translate(
+                  offset: Offset(_dragOffset, 0),
+                  child: Image.asset(
+                    _imagePaths[_currentIndex],
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                    height: double.infinity,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        color: Colors.grey[800],
+                        child: const Center(
+                          child: Icon(
+                            Icons.image_not_supported,
+                            color: Colors.white54,
+                            size: 50,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+
+                // Next image (right side)
+                if (_dragOffset < 0)
+                  Transform.translate(
+                    offset: Offset(MediaQuery.of(context).size.width + _dragOffset, 0),
                     child: Image.asset(
-                      _imagePaths[_currentIndex],
+                      _imagePaths[(_currentIndex + 1) % _imagePaths.length],
                       fit: BoxFit.cover,
+                      width: double.infinity,
+                      height: double.infinity,
                       errorBuilder: (context, error, stackTrace) {
                         return Container(
                           color: Colors.grey[800],
@@ -120,22 +208,46 @@ class _HeroSectionState extends State<HeroSection>
                       },
                     ),
                   ),
-                  // 오버레이 그래디언트
-                  Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Colors.black.withValues(alpha: 0.3),
-                          Colors.black.withValues(alpha: 0.6),
-                        ],
-                      ),
+
+                // Previous image (left side)
+                if (_dragOffset > 0)
+                  Transform.translate(
+                    offset: Offset(-MediaQuery.of(context).size.width + _dragOffset, 0),
+                    child: Image.asset(
+                      _imagePaths[(_currentIndex - 1 + _imagePaths.length) % _imagePaths.length],
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                      height: double.infinity,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Container(
+                          color: Colors.grey[800],
+                          child: const Center(
+                            child: Icon(
+                              Icons.image_not_supported,
+                              color: Colors.white54,
+                              size: 50,
+                            ),
+                          ),
+                        );
+                      },
                     ),
                   ),
-                ],
-              );
-            },
+
+                // Overlay gradient
+                Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Colors.black.withValues(alpha: 0.3),
+                        Colors.black.withValues(alpha: 0.6),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
 
           // 콘텐츠 오버레이
