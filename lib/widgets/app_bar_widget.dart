@@ -19,6 +19,8 @@ class AppBarWidget extends StatefulWidget {
 
 class _AppBarWidgetState extends State<AppBarWidget> {
   bool _isAboutHovered = false;
+  bool _isContentsHovered = false;
+  bool _isShopHovered = false;
 
   @override
   Widget build(BuildContext context) {
@@ -58,9 +60,9 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                 children: [
                   _buildAboutNavItem(),
                   const SizedBox(width: 40),
-                  _buildNavItem('CONTENTS', 1),
+                  _buildContentsNavItem(),
                   const SizedBox(width: 40),
-                  _buildNavItem('SHOP', 2),
+                  _buildShopNavItem(),
                 ],
               ),
 
@@ -81,57 +83,31 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                     ),
                   ),
                 ),
-                const SizedBox(width: 16),
-                ElevatedButton(
-                  onPressed: () {
-                    // 회원가입 기능
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.pink[600],
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 24,
-                      vertical: 12,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(25),
-                    ),
-                  ),
+                const SizedBox(width: 12),
+                TextButton(
+                  onPressed: () {},
                   child: Text(
                     '회원가입',
                     style: GoogleFonts.notoSans(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
+                      color: widget.isTransparent
+                          ? Colors.white
+                          : Colors.grey[700],
+                      fontSize: 14,
                     ),
                   ),
                 ),
-                const SizedBox(width: 16),
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: widget.isTransparent
-                        ? Colors.white.withValues(alpha: 0.2)
-                        : Colors.grey[100],
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.shopping_cart_outlined,
-                        color: widget.isTransparent ? Colors.white : Colors.grey[700],
-                        size: 20,
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        '0',
-                        style: GoogleFonts.notoSans(
-                          color:
-                              widget.isTransparent ? Colors.white : Colors.grey[700],
-                          fontSize: 14,
-                        ),
-                      ),
-                    ],
+
+                const SizedBox(width: 12),
+                TextButton(
+                  onPressed: () {},
+                  child: Text(
+                    '장바구니',
+                    style: GoogleFonts.notoSans(
+                      color: widget.isTransparent
+                          ? Colors.white
+                          : Colors.grey[700],
+                      fontSize: 14,
+                    ),
                   ),
                 ),
 
@@ -174,7 +150,69 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                       ? (widget.selectedIndex == 0
                           ? Colors.white
                           : Colors.white.withValues(alpha: 0.9))
-                      : (widget.selectedIndex == 0 ? Colors.pink[600] : Colors.grey[700]),
+                      : (widget.selectedIndex == 0
+                          ? Colors.pink[600]
+                          : Colors.grey[700]),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  // CONTENTS 전용 네비게이션 아이템 (호버 효과 포함)
+  Widget _buildContentsNavItem() {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isContentsHovered = true),
+      onExit: (_) => setState(() => _isContentsHovered = false),
+      child: GestureDetector(
+        onTap: () => widget.onItemTapped(1),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          child: Text(
+            _isContentsHovered ? '콘텐츠' : 'CONTENTS',
+            style: GoogleFonts.notoSans(
+              fontSize: 26,
+              fontWeight: FontWeight.bold,
+              color: _isContentsHovered
+                  ? const Color(0xFF2ECC71) // 호버 시 녹색
+                  : widget.isTransparent
+                      ? (widget.selectedIndex == 1
+                          ? Colors.white
+                          : Colors.white.withValues(alpha: 0.9))
+                      : (widget.selectedIndex == 1
+                          ? Colors.pink[600]
+                          : Colors.grey[700]),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  // SHOP 전용 네비게이션 아이템 (호버 효과 포함)
+  Widget _buildShopNavItem() {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isShopHovered = true),
+      onExit: (_) => setState(() => _isShopHovered = false),
+      child: GestureDetector(
+        onTap: () => widget.onItemTapped(2),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          child: Text(
+            _isShopHovered ? '쇼핑' : 'SHOP',
+            style: GoogleFonts.notoSans(
+              fontSize: 26,
+              fontWeight: FontWeight.bold,
+              color: _isShopHovered
+                  ? const Color(0xFF2ECC71) // 호버 시 녹색
+                  : widget.isTransparent
+                      ? (widget.selectedIndex == 2
+                          ? Colors.white
+                          : Colors.white.withValues(alpha: 0.9))
+                      : (widget.selectedIndex == 2
+                          ? Colors.pink[600]
+                          : Colors.grey[700]),
             ),
           ),
         ),
@@ -194,7 +232,9 @@ class _AppBarWidgetState extends State<AppBarWidget> {
               ? (widget.selectedIndex == index
                   ? Colors.white
                   : Colors.white.withValues(alpha: 0.9))
-              : (widget.selectedIndex == index ? Colors.pink[600] : Colors.grey[700]),
+              : (widget.selectedIndex == index
+                  ? Colors.pink[600]
+                  : Colors.grey[700]),
         ),
       ),
     );
