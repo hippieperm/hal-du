@@ -72,6 +72,10 @@ class _ContentsScreenState extends State<ContentsScreen> {
               selectedIndex: 1, // CONTENTS가 선택된 상태
               onItemTapped: _onItemTapped,
               isTransparent: _isAppBarTransparent,
+              onLogoTapped: () {
+                // 홈 화면으로 이동
+                Navigator.pushReplacementNamed(context, '/');
+              },
             ),
           ),
         ],

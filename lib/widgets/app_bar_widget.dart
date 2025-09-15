@@ -5,12 +5,14 @@ class AppBarWidget extends StatefulWidget {
   final int selectedIndex;
   final Function(int) onItemTapped;
   final bool isTransparent;
+  final VoidCallback? onLogoTapped;
 
   const AppBarWidget({
     super.key,
     required this.selectedIndex,
     required this.onItemTapped,
     this.isTransparent = false,
+    this.onLogoTapped,
   });
 
   @override
@@ -45,12 +47,24 @@ class _AppBarWidgetState extends State<AppBarWidget> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             // 로고
-            Text(
-              '할두',
-              style: GoogleFonts.notoSans(
-                fontSize: 42,
-                fontWeight: FontWeight.bold,
-                color: const Color(0xFF2ECC71), // 이미지의 초록색
+            MouseRegion(
+              cursor: SystemMouseCursors.click,
+              child: GestureDetector(
+                onTap: widget.onLogoTapped ?? () {
+                  // 기본 동작: 홈으로 이동
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                    '/',
+                    (route) => false,
+                  );
+                },
+                child: Text(
+                  '할두',
+                  style: GoogleFonts.notoSans(
+                    fontSize: 42,
+                    fontWeight: FontWeight.bold,
+                    color: const Color(0xFF2ECC71), // 이미지의 초록색
+                  ),
+                ),
               ),
             ),
 
@@ -220,23 +234,4 @@ class _AppBarWidgetState extends State<AppBarWidget> {
     );
   }
 
-  Widget _buildNavItem(String title, int index) {
-    return GestureDetector(
-      onTap: () => widget.onItemTapped(index),
-      child: Text(
-        title,
-        style: GoogleFonts.notoSans(
-          fontSize: 26,
-          fontWeight: FontWeight.bold,
-          color: widget.isTransparent
-              ? (widget.selectedIndex == index
-                  ? Colors.white
-                  : Colors.white.withValues(alpha: 0.9))
-              : (widget.selectedIndex == index
-                  ? Colors.pink[600]
-                  : Colors.grey[700]),
-        ),
-      ),
-    );
-  }
 }

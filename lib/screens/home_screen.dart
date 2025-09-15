@@ -72,6 +72,14 @@ class _HomeScreenState extends State<HomeScreen> {
               selectedIndex: _selectedIndex,
               onItemTapped: _onItemTapped,
               isTransparent: _isAppBarTransparent,
+              onLogoTapped: () {
+                // 홈 화면에서는 맨 위로 스크롤
+                _scrollController.animateTo(
+                  0,
+                  duration: const Duration(milliseconds: 500),
+                  curve: Curves.easeInOut,
+                );
+              },
             ),
           ),
         ],

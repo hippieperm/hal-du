@@ -21,8 +21,9 @@ class HaldoApp extends StatelessWidget {
         textTheme: GoogleFonts.notoSansTextTheme(),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: const HomeScreen(),
+      initialRoute: '/',
       routes: {
+        '/': (context) => const HomeScreen(),
         '/about': (context) => const AboutScreen(),
         '/contents': (context) => const ContentsScreen(),
         '/shop': (context) => const ShopScreen(),

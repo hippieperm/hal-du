@@ -84,6 +84,10 @@ class _AboutScreenState extends State<AboutScreen> {
               selectedIndex: 0, // ABOUT이 선택된 상태
               onItemTapped: _onItemTapped,
               isTransparent: _isAppBarTransparent,
+              onLogoTapped: () {
+                // 홈 화면으로 이동
+                Navigator.pushReplacementNamed(context, '/');
+              },
             ),
           ),
         ],
