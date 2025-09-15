@@ -4,6 +4,7 @@ import 'screens/home_screen.dart';
 import 'screens/about_screen.dart';
 import 'screens/contents_screen.dart';
 import 'screens/shop_screen.dart';
+import 'screens/product_detail_screen.dart';
 
 void main() {
   runApp(const HaldoApp());
@@ -27,6 +28,7 @@ class HaldoApp extends StatelessWidget {
         '/about': (context) => const AboutScreen(),
         '/contents': (context) => const ContentsScreen(),
         '/shop': (context) => const ShopScreen(),
+        '/product-detail': (context) => const ProductDetailScreen(),
       },
       debugShowCheckedModeBanner: false,
     );
