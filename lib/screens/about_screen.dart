@@ -151,7 +151,7 @@ class _AboutScreenState extends State<AboutScreen> {
                   Text(
                     'ABOUT 할두',
                     style: GoogleFonts.notoSans(
-                      fontSize: 48,
+                      fontSize: 78,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),
@@ -164,6 +164,9 @@ class _AboutScreenState extends State<AboutScreen> {
                       color: Colors.white.withValues(alpha: 0.9),
                     ),
                   ),
+                  SizedBox(
+                    height: 40,
+                  )
                 ],
               ),
             ),
