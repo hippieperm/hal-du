@@ -6,6 +6,7 @@ import 'screens/about_screen.dart';
 import 'screens/contents_screen.dart';
 import 'screens/shop_screen.dart';
 import 'screens/product_detail_screen.dart';
+import 'screens/content_detail_screen.dart';
 import 'services/auth_service.dart';
 
 void main() {
@@ -36,6 +37,17 @@ class HaldoApp extends StatelessWidget {
         '/contents': (context) => const ContentsScreen(),
         '/shop': (context) => const ShopScreen(),
         '/product-detail': (context) => const ProductDetailScreen(),
+      },
+      onGenerateRoute: (settings) {
+        if (settings.name == '/content-detail') {
+          final args = settings.arguments as Map<String, dynamic>?;
+          return MaterialPageRoute(
+            builder: (context) => ContentDetailScreen(
+              contentId: args?['contentId'] ?? 'unknown',
+            ),
+          );
+        }
+        return null;
       },
       debugShowCheckedModeBanner: false,
     );
