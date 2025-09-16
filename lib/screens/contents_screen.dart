@@ -236,7 +236,20 @@ class _ContentsScreenState extends State<ContentsScreen> {
   }) {
     return MouseRegion(
       cursor: SystemMouseCursors.click,
-      child: Container(
+      child: GestureDetector(
+        onTap: () {
+          // 콘텐츠 상세 페이지로 이동
+          Navigator.pushNamed(
+            context,
+            '/content-detail',
+            arguments: {
+              'contentId': title.replaceAll(' ', '-').toLowerCase(),
+              'title': title,
+              'category': category,
+            },
+          );
+        },
+        child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
           boxShadow: [
@@ -417,6 +430,7 @@ class _ContentsScreenState extends State<ContentsScreen> {
           ),
         ),
       ),
+    ),
     );
   }
 
