@@ -93,7 +93,7 @@ class _AboutScreenState extends State<AboutScreen>
 
   void _onScroll() {
     setState(() {
-      _isAppBarTransparent = _scrollController.offset < 50;
+      _isAppBarTransparent = false; // About 페이지에서는 항상 불투명
     });
     _checkVisibility();
   }
@@ -330,7 +330,7 @@ class _AboutScreenState extends State<AboutScreen>
                   Text(
                     '중년 여성들을 위한 커뮤니티 할두를 소개합니다.',
                     style: GoogleFonts.notoSans(
-                      fontSize: 18,
+                      fontSize: 20,
                       color: Colors.white.withValues(alpha: 0.9),
                     ),
                   ),
