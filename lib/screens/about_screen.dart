@@ -680,64 +680,64 @@ class _AboutScreenState extends State<AboutScreen>
   Widget _buildCommunitySection() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 80),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            height: 300,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              image: const DecorationImage(
-                image: AssetImage('assets/images/hero_image_1.jpg'),
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-          Column(
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 800),
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(
-                '국내 최대 중년 여성 커뮤니티',
-                style: GoogleFonts.notoSans(
-                  fontSize: 34,
-                  color: Colors.black87,
-                ),
-              ),
-              Text(
-                '30대 조카*들이 이끌어가고 있어요',
-                style: GoogleFonts.notoSans(
-                  fontSize: 38,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
+              Center(
+                child: Text(
+                  '국내 최대 중년 여성 커뮤니티',
+                  style: GoogleFonts.notoSans(
+                    fontSize: 32,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.black87,
+                    height: 1.4,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
               ),
               const SizedBox(height: 20),
-              Text(
-                '''할두의 특별한 점은 30대 조카들이 이모들의 삶을 
-업그레이드 시켜준다는 것입니다. 
-젊은 세대의 트렌드와 기술을 중년 여성들에게 전달하며, 
-서로 배우고 성장하는 공간을 만들어갑니다.''',
-                style: GoogleFonts.notoSans(
-                  fontSize: 16,
-                  color: Colors.grey[700],
-                  height: 1.6,
+              Center(
+                child: Text(
+                  '30대 조카*들이 이끌어가고 있어요',
+                  style: GoogleFonts.notoSans(
+                    fontSize: 36,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                    height: 1.4,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
               ),
-              const SizedBox(height: 16),
-              Text(
-                '''이모들은 조카들에게 인생의 지혜를 전수하고, 
-조카들은 이모들에게 새로운 세상의 문을 열어줍니다. 
-이런 상호 보완적인 관계가 할두만의 특별함입니다.''',
-                style: GoogleFonts.notoSans(
-                  fontSize: 16,
-                  color: Colors.grey[700],
-                  height: 1.6,
+              const SizedBox(height: 60),
+              Center(
+                child: Text(
+                  '할두의 특별한 점은 30대 조카들이 이모들의 삶을\n업그레이드 시켜준다는 것입니다.\n젊은 세대의 트렌드와 기술을 중년 여성들에게 전달하며,\n서로 배우고 성장하는 공간을 만들어갑니다.',
+                  style: GoogleFonts.notoSans(
+                    fontSize: 17,
+                    color: Colors.grey[700],
+                    height: 1.8,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 40),
+              Center(
+                child: Text(
+                  '이모들은 조카들에게 인생의 지혜를 전수하고,\n조카들은 이모들에게 새로운 세상의 문을 열어줍니다.\n이런 상호 보완적인 관계가 할두만의 특별함입니다.',
+                  style: GoogleFonts.notoSans(
+                    fontSize: 17,
+                    color: Colors.grey[700],
+                    height: 1.8,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
             ],
           ),
-        ],
+        ),
       ),
     );
   }

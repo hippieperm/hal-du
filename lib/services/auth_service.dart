@@ -1,9 +1,9 @@
-import 'dart:convert';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../models/user_model.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService extends ChangeNotifier {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   UserModel? _currentUser;
   bool _isLoading = false;
   String? _errorMessage;
@@ -13,44 +13,29 @@ class AuthService extends ChangeNotifier {
   String? get errorMessage => _errorMessage;
   bool get isLoggedIn => _currentUser != null;
 
-  final Map<String, Map<String, dynamic>> _mockDatabase = {};
-
   AuthService() {
-    _loadUserFromStorage();
+    _initAuthService();
   }
 
-  Future<void> _loadUserFromStorage() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final userDataString = prefs.getString('currentUser');
-      if (userDataString != null) {
-        final userData = jsonDecode(userDataString);
-        _currentUser = UserModel.fromJson(userData);
-        notifyListeners();
+  void _initAuthService() {
+    // Firebase Auth 상태 변화 리스너
+    _auth.authStateChanges().listen((User? user) {
+      if (user != null) {
+        _currentUser = UserModel(
+          id: user.uid,
+          email: user.email ?? '',
+          name: user.displayName ?? '사용자',
+          createdAt: user.metadata.creationTime ?? DateTime.now(),
+          lastLoginAt: DateTime.now(),
+        );
+      } else {
+        _currentUser = null;
       }
-    } catch (e) {
-      print('Failed to load user from storage: $e');
-    }
+      notifyListeners();
+    });
   }
 
-  Future<void> _saveUserToStorage(UserModel user) async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('currentUser', jsonEncode(user.toJson()));
-    } catch (e) {
-      print('Failed to save user to storage: $e');
-    }
-  }
-
-  Future<void> _clearUserFromStorage() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.remove('currentUser');
-    } catch (e) {
-      print('Failed to clear user from storage: $e');
-    }
-  }
-
+  // Firebase 회원가입
   Future<bool> signUp({
     required String email,
     required String password,
@@ -62,36 +47,36 @@ class AuthService extends ChangeNotifier {
     notifyListeners();
 
     try {
-      await Future.delayed(const Duration(seconds: 1));
-
-      if (_mockDatabase.containsKey(email)) {
-        _errorMessage = '이미 등록된 이메일입니다.';
-        _isLoading = false;
-        notifyListeners();
-        return false;
-      }
-
-      final userId = DateTime.now().millisecondsSinceEpoch.toString();
-      final newUser = UserModel(
-        id: userId,
+      // Firebase Authentication으로 사용자 생성
+      final UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
         email: email,
-        name: name,
-        phone: phone,
-        createdAt: DateTime.now(),
-        lastLoginAt: DateTime.now(),
+        password: password,
       );
 
-      _mockDatabase[email] = {
-        'password': password,
-        'user': newUser.toJson(),
-      };
-
-      _currentUser = newUser;
-      await _saveUserToStorage(newUser);
+      // 사용자 이름 업데이트
+      await userCredential.user?.updateDisplayName(name);
+      await userCredential.user?.reload();
 
       _isLoading = false;
       notifyListeners();
       return true;
+    } on FirebaseAuthException catch (e) {
+      _isLoading = false;
+      switch (e.code) {
+        case 'weak-password':
+          _errorMessage = '비밀번호가 너무 약합니다.';
+          break;
+        case 'email-already-in-use':
+          _errorMessage = '이미 사용 중인 이메일입니다.';
+          break;
+        case 'invalid-email':
+          _errorMessage = '올바른 이메일 형식이 아닙니다.';
+          break;
+        default:
+          _errorMessage = '회원가입 중 오류가 발생했습니다: ${e.message}';
+      }
+      notifyListeners();
+      return false;
     } catch (e) {
       _errorMessage = '회원가입 중 오류가 발생했습니다: $e';
       _isLoading = false;
@@ -100,6 +85,7 @@ class AuthService extends ChangeNotifier {
     }
   }
 
+  // Firebase 로그인
   Future<bool> login({
     required String email,
     required String password,
@@ -109,33 +95,37 @@ class AuthService extends ChangeNotifier {
     notifyListeners();
 
     try {
-      await Future.delayed(const Duration(seconds: 1));
-
-      if (!_mockDatabase.containsKey(email)) {
-        _errorMessage = '등록되지 않은 이메일입니다.';
-        _isLoading = false;
-        notifyListeners();
-        return false;
-      }
-
-      final userData = _mockDatabase[email]!;
-      if (userData['password'] != password) {
-        _errorMessage = '비밀번호가 올바르지 않습니다.';
-        _isLoading = false;
-        notifyListeners();
-        return false;
-      }
-
-      final user = UserModel.fromJson(userData['user']);
-      final updatedUser = user.copyWith(lastLoginAt: DateTime.now());
-
-      _mockDatabase[email]!['user'] = updatedUser.toJson();
-      _currentUser = updatedUser;
-      await _saveUserToStorage(updatedUser);
+      await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
 
       _isLoading = false;
       notifyListeners();
       return true;
+    } on FirebaseAuthException catch (e) {
+      _isLoading = false;
+      switch (e.code) {
+        case 'user-not-found':
+          _errorMessage = '등록되지 않은 이메일입니다.';
+          break;
+        case 'wrong-password':
+          _errorMessage = '비밀번호가 올바르지 않습니다.';
+          break;
+        case 'invalid-email':
+          _errorMessage = '올바른 이메일 형식이 아닙니다.';
+          break;
+        case 'user-disabled':
+          _errorMessage = '비활성된 계정입니다.';
+          break;
+        case 'too-many-requests':
+          _errorMessage = '너무 많은 로그인 시도로 일시적으로 차단되었습니다.';
+          break;
+        default:
+          _errorMessage = '로그인 중 오류가 발생했습니다: ${e.message}';
+      }
+      notifyListeners();
+      return false;
     } catch (e) {
       _errorMessage = '로그인 중 오류가 발생했습니다: $e';
       _isLoading = false;
@@ -144,20 +134,52 @@ class AuthService extends ChangeNotifier {
     }
   }
 
+  // Firebase 로그아웃
   Future<void> logout() async {
     _isLoading = true;
     notifyListeners();
 
     try {
-      await Future.delayed(const Duration(milliseconds: 500));
-      _currentUser = null;
-      await _clearUserFromStorage();
+      await _auth.signOut();
       _errorMessage = null;
     } catch (e) {
       _errorMessage = '로그아웃 중 오류가 발생했습니다: $e';
     } finally {
       _isLoading = false;
       notifyListeners();
+    }
+  }
+
+  // 비밀번호 재설정 이메일 보내기
+  Future<bool> resetPassword(String email) async {
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+      _isLoading = false;
+      notifyListeners();
+      return true;
+    } on FirebaseAuthException catch (e) {
+      _isLoading = false;
+      switch (e.code) {
+        case 'user-not-found':
+          _errorMessage = '등록되지 않은 이메일입니다.';
+          break;
+        case 'invalid-email':
+          _errorMessage = '올바른 이메일 형식이 아닙니다.';
+          break;
+        default:
+          _errorMessage = '비밀번호 재설정 이메일 전송 중 오류가 발생했습니다.';
+      }
+      notifyListeners();
+      return false;
+    } catch (e) {
+      _errorMessage = '비밀번호 재설정 이메일 전송 중 오류가 발생했습니다: $e';
+      _isLoading = false;
+      notifyListeners();
+      return false;
     }
   }
 

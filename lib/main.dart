@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'screens/home_screen.dart';
 import 'screens/about_screen.dart';
 import 'screens/contents_screen.dart';
@@ -9,7 +10,21 @@ import 'screens/product_detail_screen.dart';
 import 'screens/content_detail_screen.dart';
 import 'services/auth_service.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  // Firebase 초기화
+  await Firebase.initializeApp(
+    options: const FirebaseOptions(
+      apiKey: "your-api-key", // TODO: 실제 값으로 변경
+      authDomain: "your-project.firebaseapp.com",
+      projectId: "your-project-id",
+      storageBucket: "your-project.appspot.com",
+      messagingSenderId: "123456789",
+      appId: "your-app-id",
+    ),
+  );
+  
   runApp(
     ChangeNotifierProvider(
       create: (context) => AuthService(),
