@@ -116,28 +116,58 @@ class _AboutScreenState extends State<AboutScreen> {
             ],
           ),
         ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'ABOUT 할두',
-                style: GoogleFonts.notoSans(
-                  fontSize: 48,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
+        child: Stack(
+          children: [
+            // 우측에 이미지 배치
+            Positioned(
+              top: 120,
+              right: 60,
+              child: Container(
+                width: 300,
+                height: 400,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.3),
+                      blurRadius: 20,
+                      offset: const Offset(0, 10),
+                    ),
+                  ],
+                  image: const DecorationImage(
+                    image: AssetImage('assets/images/hero_image_2.jpg'),
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
-              const SizedBox(height: 16),
-              Text(
-                '중년 여성들을 위한 커뮤니티 할두를 소개합니다.',
-                style: GoogleFonts.notoSans(
-                  fontSize: 18,
-                  color: Colors.white.withValues(alpha: 0.9),
-                ),
+            ),
+            // 좌측 하단에 텍스트 배치
+            Positioned(
+              bottom: 40,
+              left: 700,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'ABOUT 할두',
+                    style: GoogleFonts.notoSans(
+                      fontSize: 48,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    '중년 여성들을 위한 커뮤니티 할두를 소개합니다.',
+                    style: GoogleFonts.notoSans(
+                      fontSize: 18,
+                      color: Colors.white.withValues(alpha: 0.9),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
