@@ -7,7 +7,7 @@ import 'screens/contents_screen.dart';
 import 'screens/shop_screen.dart';
 import 'screens/product_detail_screen.dart';
 import 'services/auth_service.dart';
-
+//test
 void main() {
   runApp(
     ChangeNotifierProvider(
@@ -25,7 +25,7 @@ class HaldoApp extends StatelessWidget {
     return MaterialApp(
       title: '할두 - 할머니가 되어서도 두근두근!',
       theme: ThemeData(
-        primarySwatch: Colors.pink,
+        primarySwatch: Colors.pink,₩
         textTheme: GoogleFonts.notoSansTextTheme(),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
