@@ -417,7 +417,7 @@ class _AboutScreenState extends State<AboutScreen> {
             ),
           ),
           Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
                 '국내 최대 중년 여성 커뮤니티',
