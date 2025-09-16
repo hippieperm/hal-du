@@ -9,17 +9,19 @@ class TermsDialog extends StatefulWidget {
 }
 
 class _TermsDialogState extends State<TermsDialog> {
+  bool _agreeToAll = false;
   bool _agreeToTerms = false;
   bool _agreeToPrivacy = false;
   bool _agreeToCollection = false;
   bool _agreeToMarketing = false;
   bool _confirmAge = false;
 
-  bool get _canSubmit =>
-      _agreeToTerms &&
+  bool get _allRequiredChecked =>
       _agreeToPrivacy &&
       _agreeToCollection &&
       _confirmAge;
+
+  bool get _canSubmit => _allRequiredChecked;
 
   @override
   Widget build(BuildContext context) {
@@ -55,8 +57,14 @@ class _TermsDialogState extends State<TermsDialog> {
                   children: [
                     // 이용약관 및 개인정보 수집 동의
                     _buildCheckboxItem(
-                      value: _agreeToTerms,
-                      onChanged: (value) => setState(() => _agreeToTerms = value!),
+                      value: _allRequiredChecked && _agreeToMarketing,
+                      onChanged: (value) => setState(() {
+                        _agreeToAll = value!;
+                        _agreeToPrivacy = value;
+                        _agreeToCollection = value;
+                        _confirmAge = value;
+                        _agreeToMarketing = value;
+                      }),
                       title: '이용약관, 개인정보 수집 및 이용에 모두 동의합니다.',
                     ),
                     const SizedBox(height: 20),
@@ -64,7 +72,9 @@ class _TermsDialogState extends State<TermsDialog> {
                     // 이용약관 동의 (필수)
                     _buildCheckboxItem(
                       value: _agreeToPrivacy,
-                      onChanged: (value) => setState(() => _agreeToPrivacy = value!),
+                      onChanged: (value) => setState(() {
+                        _agreeToPrivacy = value!;
+                      }),
                       title: '이용약관 동의',
                       isRequired: true,
                     ),
@@ -107,7 +117,9 @@ class _TermsDialogState extends State<TermsDialog> {
                     // 개인정보 수집 및 이용 동의 (필수)
                     _buildCheckboxItem(
                       value: _agreeToCollection,
-                      onChanged: (value) => setState(() => _agreeToCollection = value!),
+                      onChanged: (value) => setState(() {
+                        _agreeToCollection = value!;
+                      }),
                       title: '개인정보 수집 및 이용 동의',
                       isRequired: true,
                     ),
@@ -158,7 +170,9 @@ class _TermsDialogState extends State<TermsDialog> {
                     // 만 14세 이상 확인 (필수)
                     _buildCheckboxItem(
                       value: _confirmAge,
-                      onChanged: (value) => setState(() => _confirmAge = value!),
+                      onChanged: (value) => setState(() {
+                        _confirmAge = value!;
+                      }),
                       title: '만 14세 이상입니다.',
                       isRequired: true,
                     ),
