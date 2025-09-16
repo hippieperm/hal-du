@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'firebase_config.dart';
 import 'screens/home_screen.dart';
 import 'screens/about_screen.dart';
 import 'screens/contents_screen.dart';
@@ -15,14 +16,7 @@ void main() async {
   
   // Firebase 초기화
   await Firebase.initializeApp(
-    options: const FirebaseOptions(
-      apiKey: "your-api-key", // TODO: 실제 값으로 변경
-      authDomain: "your-project.firebaseapp.com",
-      projectId: "your-project-id",
-      storageBucket: "your-project.appspot.com",
-      messagingSenderId: "123456789",
-      appId: "your-app-id",
-    ),
+    options: FirebaseConfig.firebaseOptions,
   );
   
   runApp(
