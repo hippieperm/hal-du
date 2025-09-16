@@ -35,15 +35,7 @@ class _AppBarWidgetState extends State<AppBarWidget> {
       height: 80,
       decoration: BoxDecoration(
         color: widget.isTransparent ? Colors.transparent : Colors.white,
-        boxShadow: widget.isTransparent
-            ? []
-            : [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.1),
-                  blurRadius: 10,
-                  offset: const Offset(0, 2),
-                ),
-              ],
+        boxShadow: [],
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
