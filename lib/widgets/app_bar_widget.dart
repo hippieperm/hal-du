@@ -210,18 +210,21 @@ class _AppBarWidgetState extends State<AppBarWidget> {
         onTap: () => widget.onItemTapped(0),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
-          child: Text(
-            _isAboutHovered ? '할두란?' : 'ABOUT',
-            style: GoogleFonts.notoSans(
-              fontSize: 26,
-              fontWeight: FontWeight.bold,
-              color: _isAboutHovered
-                  ? const Color(0xFF2ECC71) // 호버 시 지정된 녹색
-                  : widget.isTransparent
-                      ? (widget.selectedIndex == 0
-                          ? Colors.white
-                          : Colors.white.withValues(alpha: 0.9))
-                      : Colors.black87,
+          width: 150,
+          child: Center(
+            child: Text(
+              _isAboutHovered ? '할두란?' : 'ABOUT',
+              style: GoogleFonts.notoSans(
+                fontSize: 26,
+                fontWeight: FontWeight.bold,
+                color: _isAboutHovered
+                    ? const Color(0xFF2ECC71) // 호버 시 지정된 녹색
+                    : widget.isTransparent
+                        ? (widget.selectedIndex == 0
+                            ? Colors.white
+                            : Colors.white.withValues(alpha: 0.9))
+                        : Colors.black87,
+              ),
             ),
           ),
         ),
@@ -238,18 +241,21 @@ class _AppBarWidgetState extends State<AppBarWidget> {
         onTap: () => widget.onItemTapped(1),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
-          child: Text(
-            _isContentsHovered ? '콘텐츠' : 'CONTENTS',
-            style: GoogleFonts.notoSans(
-              fontSize: 26,
-              fontWeight: FontWeight.bold,
-              color: _isContentsHovered
-                  ? const Color(0xFF2ECC71) // 호버 시 녹색
-                  : widget.isTransparent
-                      ? (widget.selectedIndex == 1
-                          ? Colors.white
-                          : Colors.white.withValues(alpha: 0.9))
-                      : Colors.black87,
+          width: 150,
+          child: Center(
+            child: Text(
+              _isContentsHovered ? '콘텐츠' : 'CONTENTS',
+              style: GoogleFonts.notoSans(
+                fontSize: 26,
+                fontWeight: FontWeight.bold,
+                color: _isContentsHovered
+                    ? const Color(0xFF2ECC71) // 호버 시 녹색
+                    : widget.isTransparent
+                        ? (widget.selectedIndex == 1
+                            ? Colors.white
+                            : Colors.white.withValues(alpha: 0.9))
+                        : Colors.black87,
+              ),
             ),
           ),
         ),
@@ -266,18 +272,21 @@ class _AppBarWidgetState extends State<AppBarWidget> {
         onTap: () => widget.onItemTapped(2),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
-          child: Text(
-            _isShopHovered ? '쇼핑' : 'SHOP',
-            style: GoogleFonts.notoSans(
-              fontSize: 26,
-              fontWeight: FontWeight.bold,
-              color: _isShopHovered
-                  ? const Color(0xFF2ECC71) // 호버 시 녹색
-                  : widget.isTransparent
-                      ? (widget.selectedIndex == 2
-                          ? Colors.white
-                          : Colors.white.withValues(alpha: 0.9))
-                      : Colors.black87,
+          width: 150,
+          child: Center(
+            child: Text(
+              _isShopHovered ? '쇼핑' : 'SHOP',
+              style: GoogleFonts.notoSans(
+                fontSize: 26,
+                fontWeight: FontWeight.bold,
+                color: _isShopHovered
+                    ? const Color(0xFF2ECC71) // 호버 시 녹색
+                    : widget.isTransparent
+                        ? (widget.selectedIndex == 2
+                            ? Colors.white
+                            : Colors.white.withValues(alpha: 0.9))
+                        : Colors.black87,
+              ),
             ),
           ),
         ),
