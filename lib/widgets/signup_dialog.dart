@@ -24,6 +24,7 @@ class _SignupDialogState extends State<SignupDialog> {
   int _selectedDay = 1;
 
   List<String> _selectedInterests = [];
+  bool _termsAccepted = false;
 
   final List<String> _interests = [
     '운동', '독서', '글쓰기', '요리', '그림', '댄스', '공부', '기타'
@@ -39,13 +40,28 @@ class _SignupDialogState extends State<SignupDialog> {
     super.dispose();
   }
 
+  @override
+  void initState() {
+    super.initState();
+    // 다이얼로그 열릴 때 약관 동의부터 시작
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _showTermsDialog();
+    });
+  }
+
   void _showTermsDialog() {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (context) => const TermsDialog(),
     ).then((accepted) {
       if (accepted == true) {
-        _submitSignup();
+        setState(() {
+          _termsAccepted = true;
+        });
+      } else {
+        // 약관 동의 안하면 다이얼로그 닫기
+        Navigator.of(context).pop();
       }
     });
   }
@@ -83,6 +99,11 @@ class _SignupDialogState extends State<SignupDialog> {
 
   @override
   Widget build(BuildContext context) {
+    // 약관 동의 전에는 빈 Container 반환
+    if (!_termsAccepted) {
+      return const SizedBox.shrink();
+    }
+
     return Dialog(
       backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(
@@ -335,7 +356,7 @@ class _SignupDialogState extends State<SignupDialog> {
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
-                          onPressed: _showTermsDialog,
+                          onPressed: _submitSignup,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFF2ECC71),
                             foregroundColor: Colors.white,
