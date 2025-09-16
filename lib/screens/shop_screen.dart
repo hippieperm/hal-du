@@ -178,7 +178,7 @@ class _ShopScreenState extends State<ShopScreen> {
       childAspectRatio: 0.65,
       children: [
         _buildProductCard(
-          'assets/images/hero_image_1.jpg',
+          'assets/images/grandmother.jpg',
           '낙담 줄인 내천함 헤어 (50대 60대 점감 세이 향감 5마)',
           '33,000원',
           '할두 줄인 내천함 헤어 (50대 60대 점감 세이 향감 5마)',
@@ -186,7 +186,7 @@ class _ShopScreenState extends State<ShopScreen> {
           false,
         ),
         _buildProductCard(
-          'assets/images/hero_image_2.jpg',
+          'assets/images/grandmother.jpg',
           '마행하지 감동되는 굉가 ( 50대 60대 종감은 감감 종점 )',
           '10,000원',
           '마행하지 감동되는 굉가 ( 50대 60대 종감은 감감 종점 )',
@@ -202,7 +202,7 @@ class _ShopScreenState extends State<ShopScreen> {
           true,
         ),
         _buildProductCard(
-          'assets/images/hero_image_1.jpg',
+          'assets/images/grandmother.jpg',
           '[진문가히] 실가가쓸 챠품리 내인네 - 촘벽 신성',
           '12,000원',
           '[진문가히] 실가가쓸 챠품리 내인네 - 촘벽 신성',
@@ -210,7 +210,7 @@ class _ShopScreenState extends State<ShopScreen> {
           false,
         ),
         _buildProductCard(
-          'assets/images/hero_image_2.jpg',
+          'assets/images/grandmother.jpg',
           '할무 재단 클럽 특기 쇠은 (50대 60대 여성 미은 감봘아는 대회)',
           '32,000원',
           '촌가탁 팹이 춰에 숙솟 발줍이아!',
@@ -226,7 +226,7 @@ class _ShopScreenState extends State<ShopScreen> {
           false,
         ),
         _buildProductCard(
-          'assets/images/hero_image_1.jpg',
+          'assets/images/grandmother.jpg',
           '[미이] 멜간과 다리멜간 될줄 시쓸나 신감 아이야간 멀이 젓이 이촘',
           '25,000원',
           '[미이] 멜간과 다리멜간 될줄 시쓸나',
@@ -234,7 +234,7 @@ class _ShopScreenState extends State<ShopScreen> {
           false,
         ),
         _buildProductCard(
-          'assets/images/hero_image_2.jpg',
+          'assets/images/grandmother.jpg',
           '[우니] 메에하네이 나시, 멤을 줄영은 서별한 서가 아웅 웝이 아이야 신영',
           '14,800원',
           '[우니] 메에하네이 나시, 멤을 줄영은 서별한',
@@ -250,7 +250,7 @@ class _ShopScreenState extends State<ShopScreen> {
           false,
         ),
         _buildProductCard(
-          'assets/images/hero_image_1.jpg',
+          'assets/images/grandmother.jpg',
           '사기능타 나기가능 완도 시간 활량 셸링 (50대 60대 나기 모양)',
           '30,000원',
           '사기능타 나기가능 완도 시간 활량 셸링',
@@ -267,7 +267,7 @@ class _ShopScreenState extends State<ShopScreen> {
           false,
         ),
         _buildProductCard(
-          'assets/images/hero_image_2.jpg',
+          'assets/images/grandmother.jpg',
           '[50년] 우리 호어 30가 아인 더더 호어수들',
           '10,000원',
           '촌가히 팹이\n등대 숙영 말봅이야!',
