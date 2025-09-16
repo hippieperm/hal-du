@@ -32,7 +32,7 @@ class _AppBarWidgetState extends State<AppBarWidget> {
   Widget build(BuildContext context) {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
-      height: 80,
+      height: 70,
       decoration: BoxDecoration(
         color: widget.isTransparent ? Colors.transparent : Colors.white,
         boxShadow: [],
@@ -57,7 +57,7 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                 child: Text(
                   '할두',
                   style: GoogleFonts.notoSans(
-                    fontSize: 42,
+                    fontSize: 32,
                     fontWeight: FontWeight.bold,
                     color: const Color(0xFF2ECC71), // 이미지의 초록색
                   ),
@@ -207,7 +207,7 @@ class _AppBarWidgetState extends State<AppBarWidget> {
             child: Text(
               _isAboutHovered ? '할두란?' : 'ABOUT',
               style: GoogleFonts.notoSans(
-                fontSize: 26,
+                fontSize: 22,
                 fontWeight: FontWeight.bold,
                 color: _isAboutHovered
                     ? const Color(0xFF2ECC71) // 호버 시 지정된 녹색
@@ -238,7 +238,7 @@ class _AppBarWidgetState extends State<AppBarWidget> {
             child: Text(
               _isContentsHovered ? '콘텐츠' : 'CONTENTS',
               style: GoogleFonts.notoSans(
-                fontSize: 26,
+                fontSize: 22,
                 fontWeight: FontWeight.bold,
                 color: _isContentsHovered
                     ? const Color(0xFF2ECC71) // 호버 시 녹색
@@ -269,7 +269,7 @@ class _AppBarWidgetState extends State<AppBarWidget> {
             child: Text(
               _isShopHovered ? '쇼핑' : 'SHOP',
               style: GoogleFonts.notoSans(
-                fontSize: 26,
+                fontSize: 22,
                 fontWeight: FontWeight.bold,
                 color: _isShopHovered
                     ? const Color(0xFF2ECC71) // 호버 시 녹색
