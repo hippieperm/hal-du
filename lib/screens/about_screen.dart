@@ -683,7 +683,8 @@ class _AboutScreenState extends State<AboutScreen>
               ),
               const SizedBox(height: 20),
               Text(
-                '''할두의 특별한 점은 30대 조카들이 이모들의 삶을 업그레이드 시켜준다는 것입니다. 
+                '''할두의 특별한 점은 30대 조카들이 이모들의 삶을 
+업그레이드 시켜준다는 것입니다. 
 젊은 세대의 트렌드와 기술을 중년 여성들에게 전달하며, 
 서로 배우고 성장하는 공간을 만들어갑니다.''',
                 style: GoogleFonts.notoSans(
