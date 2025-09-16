@@ -12,7 +12,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final ScrollController _scrollController = ScrollController();
-  int _selectedIndex = 0;
+  final int _selectedIndex = 0;
   bool _isAppBarTransparent = true;
 
   @override

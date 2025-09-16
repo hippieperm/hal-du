@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import '../widgets/app_bar_widget.dart';
 import '../widgets/footer_widget.dart';
+import '../services/auth_service.dart';
+import '../widgets/admin/product_management_dialog.dart';
+import '../models/product_model.dart';
 
 class ShopScreen extends StatefulWidget {
   const ShopScreen({super.key});
@@ -106,12 +110,45 @@ class _ShopScreenState extends State<ShopScreen> {
   }
 
   Widget _buildShopSection() {
+    final authService = Provider.of<AuthService>(context);
+    final isAdmin = authService.isAdmin;
+
     return Center(
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 20),
         constraints: const BoxConstraints(maxWidth: 1200),
         child: Column(
           children: [
+            // 관리자인 경우 상품 추가 버튼 표시
+            if (isAdmin) ...[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) => ProductManagementDialog(
+                          onSave: (product) {
+                            // TODO: Firebase에 상품 저장
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('상품이 등록되었습니다')),
+                            );
+                          },
+                        ),
+                      );
+                    },
+                    icon: const Icon(Icons.add),
+                    label: const Text('상품 추가'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF00C853),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+            ],
+            
             // 카테고리 필터
             _buildCategoryFilters(),
             const SizedBox(height: 50),
@@ -286,12 +323,42 @@ class _ShopScreenState extends State<ShopScreen> {
     bool isHot,
     bool hasSpecialTag,
   ) {
+    final authService = Provider.of<AuthService>(context);
+    final isAdmin = authService.isAdmin;
+    
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
         onTap: () {
           Navigator.pushNamed(context, '/product-detail');
         },
+        onLongPress: isAdmin ? () {
+          showDialog(
+            context: context,
+            builder: (context) => ProductManagementDialog(
+              product: Product(
+                id: DateTime.now().millisecondsSinceEpoch.toString(),
+                name: title,
+                price: double.tryParse(price.replaceAll(',', '').replaceAll('원', '')) ?? 0,
+                description: description,
+                imageUrl: imagePath,
+                category: '전체',
+              ),
+              onSave: (product) {
+                // TODO: Firebase에 상품 업데이트
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('상품이 수정되었습니다')),
+                );
+              },
+              onDelete: () {
+                // TODO: Firebase에서 상품 삭제
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('상품이 삭제되었습니다')),
+                );
+              },
+            ),
+          );
+        } : null,
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8),
@@ -404,6 +471,25 @@ class _ShopScreenState extends State<ShopScreen> {
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                             ),
+                          ),
+                        ),
+                      ),
+                    
+                    // 관리자 편집 아이콘
+                    if (isAdmin)
+                      Positioned(
+                        top: 8,
+                        right: 8,
+                        child: Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                            color: Colors.black.withValues(alpha: 0.7),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.edit,
+                            size: 16,
+                            color: Colors.white,
                           ),
                         ),
                       ),

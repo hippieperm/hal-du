@@ -279,6 +279,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     );
   }
 
+  /*
   Widget _buildProductOptions() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -359,6 +360,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       ],
     );
   }
+  */
 
   Widget _buildNewPurchaseButtons() {
     return Row(
@@ -442,6 +444,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     );
   }
 
+  /*
   Widget _buildPurchaseButtons() {
     return Row(
       children: [
@@ -505,6 +508,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       ],
     );
   }
+  */
 
   Widget _buildEnglishLearningSection() {
     return Container(

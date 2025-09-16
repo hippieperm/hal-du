@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../models/user_model.dart';
+import '../config/admin_config.dart';
 
 class AuthService extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -12,6 +13,7 @@ class AuthService extends ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
   bool get isLoggedIn => _currentUser != null;
+  bool get isAdmin => _currentUser?.isAdmin ?? false;
 
   AuthService() {
     _initAuthService();
@@ -21,10 +23,12 @@ class AuthService extends ChangeNotifier {
     // Firebase Auth 상태 변화 리스너
     _auth.authStateChanges().listen((User? user) {
       if (user != null) {
+        final email = user.email ?? '';
         _currentUser = UserModel(
           id: user.uid,
-          email: user.email ?? '',
+          email: email,
           name: user.displayName ?? '사용자',
+          isAdmin: AdminConfig.isAdminEmail(email),
           createdAt: user.metadata.creationTime ?? DateTime.now(),
           lastLoginAt: DateTime.now(),
         );

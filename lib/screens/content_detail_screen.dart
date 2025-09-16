@@ -344,10 +344,10 @@ class _ContentDetailScreenState extends State<ContentDetailScreen> {
         Container(
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: const Color(0xFF2ECC71).withOpacity(0.1),
+            color: const Color(0xFF2ECC71).withValues(alpha: 0.026),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: const Color(0xFF2ECC71).withOpacity(0.3),
+              color: const Color(0xFF2ECC71).withValues(alpha: 0.077),
             ),
           ),
           child: Column(
@@ -524,7 +524,7 @@ class _ContentDetailScreenState extends State<ContentDetailScreen> {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.013),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -552,7 +552,7 @@ class _ContentDetailScreenState extends State<ContentDetailScreen> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF2ECC71).withOpacity(0.1),
+                    color: const Color(0xFF2ECC71).withValues(alpha: 0.026),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(

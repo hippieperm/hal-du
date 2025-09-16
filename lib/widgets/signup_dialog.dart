@@ -20,7 +20,7 @@ class PhoneNumberFormatter extends TextInputFormatter {
     }
     
     String formatted = '';
-    if (digitsOnly.length >= 1) {
+    if (digitsOnly.isNotEmpty) {
       if (digitsOnly.length <= 3) {
         formatted = digitsOnly;
       } else if (digitsOnly.length <= 7) {
@@ -56,7 +56,7 @@ class _SignupDialogState extends State<SignupDialog> {
   int _selectedMonth = 1;
   int _selectedDay = 1;
 
-  List<String> _selectedInterests = [];
+  final List<String> _selectedInterests = [];
   bool _termsAccepted = false;
 
   final List<String> _interests = [
@@ -94,7 +94,9 @@ class _SignupDialogState extends State<SignupDialog> {
         });
       } else {
         // 약관 동의 안하면 다이얼로그 닫기
-        Navigator.of(context).pop();
+        if (context.mounted) {
+          Navigator.of(context).pop();
+        }
       }
     });
   }

@@ -3,6 +3,7 @@ class UserModel {
   final String email;
   final String name;
   final String? phone;
+  final bool isAdmin;
   final DateTime createdAt;
   final DateTime? lastLoginAt;
 
@@ -11,6 +12,7 @@ class UserModel {
     required this.email,
     required this.name,
     this.phone,
+    this.isAdmin = false,
     required this.createdAt,
     this.lastLoginAt,
   });
@@ -21,6 +23,7 @@ class UserModel {
       email: json['email'],
       name: json['name'],
       phone: json['phone'],
+      isAdmin: json['isAdmin'] ?? false,
       createdAt: DateTime.parse(json['createdAt']),
       lastLoginAt: json['lastLoginAt'] != null
           ? DateTime.parse(json['lastLoginAt'])
@@ -34,6 +37,7 @@ class UserModel {
       'email': email,
       'name': name,
       'phone': phone,
+      'isAdmin': isAdmin,
       'createdAt': createdAt.toIso8601String(),
       'lastLoginAt': lastLoginAt?.toIso8601String(),
     };
@@ -44,6 +48,7 @@ class UserModel {
     String? email,
     String? name,
     String? phone,
+    bool? isAdmin,
     DateTime? createdAt,
     DateTime? lastLoginAt,
   }) {
@@ -52,6 +57,7 @@ class UserModel {
       email: email ?? this.email,
       name: name ?? this.name,
       phone: phone ?? this.phone,
+      isAdmin: isAdmin ?? this.isAdmin,
       createdAt: createdAt ?? this.createdAt,
       lastLoginAt: lastLoginAt ?? this.lastLoginAt,
     );

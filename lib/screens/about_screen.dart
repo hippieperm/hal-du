@@ -125,7 +125,6 @@ class _AboutScreenState extends State<AboutScreen>
 
           // 요소가 화면에 보이는지 확인 (10% 이상 보일 때 애니메이션 시작)
           final elementTop = position.dy;
-          final elementBottom = position.dy + size.height;
           final visibleTop = math.max(0, -elementTop);
           final visibleBottom =
               math.min(size.height, screenHeight - elementTop);
@@ -453,7 +452,7 @@ class _AboutScreenState extends State<AboutScreen>
   }
 
   Widget _buildGrandmotherSection() {
-    return Container(
+    return SizedBox(
       width: double.infinity,
       child: Center(
         child: ConstrainedBox(

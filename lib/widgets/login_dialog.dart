@@ -112,9 +112,9 @@ class _LoginDialogState extends State<LoginDialog> {
                 final authService = Provider.of<AuthService>(context, listen: false);
                 final success = await authService.resetPassword(emailController.text);
                 
-                Navigator.pop(context);
-                
-                ScaffoldMessenger.of(context).showSnackBar(
+                if (context.mounted) {
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text(
                       success 
@@ -124,6 +124,7 @@ class _LoginDialogState extends State<LoginDialog> {
                     backgroundColor: success ? Colors.green : Colors.red,
                   ),
                 );
+                }
               }
             },
             child: Text('보내기'),
