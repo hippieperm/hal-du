@@ -176,12 +176,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                
+
                 // NEW 태그와 가격, 공유 버튼
                 Row(
                   children: [
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
                         color: const Color(0xFF2ECC71),
                         borderRadius: BorderRadius.circular(4),
@@ -218,7 +219,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   ),
                 ),
                 const SizedBox(height: 40),
-                
+
                 // 구분선
                 Container(
                   width: double.infinity,
@@ -237,11 +238,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   ),
                 ),
                 const SizedBox(height: 15),
-                
+
                 // 드롭다운
                 Container(
                   width: double.infinity,
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                   decoration: BoxDecoration(
                     color: Colors.grey[100],
                     borderRadius: BorderRadius.circular(8),
@@ -362,22 +364,23 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     return Row(
       children: [
         Expanded(
-          child: ElevatedButton(
+          child: OutlinedButton(
             onPressed: () {},
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF2ECC71),
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(vertical: 18),
+            style: OutlinedButton.styleFrom(
+              foregroundColor: const Color(0xFF2ECC71),
+              side: const BorderSide(color: Color(0xFF2ECC71), width: 2),
+              padding: const EdgeInsets.symmetric(vertical: 20),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(25),
+                borderRadius: BorderRadius.circular(30),
               ),
-              elevation: 0,
+              backgroundColor: Colors.white,
             ),
             child: Text(
               '구매하기',
               style: GoogleFonts.notoSans(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
+                color: const Color(0xFF2ECC71),
               ),
             ),
           ),
@@ -388,10 +391,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             onPressed: () {},
             style: OutlinedButton.styleFrom(
               foregroundColor: Colors.grey[700],
-              side: BorderSide(color: Colors.grey[300]!, width: 1),
-              padding: const EdgeInsets.symmetric(vertical: 18),
+              side: BorderSide(color: Colors.grey[300]!, width: 2),
+              padding: const EdgeInsets.symmetric(vertical: 20),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(25),
+                borderRadius: BorderRadius.circular(30),
               ),
               backgroundColor: Colors.white,
             ),
@@ -406,11 +409,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         ),
         const SizedBox(width: 12),
         Container(
-          width: 54,
-          height: 54,
+          height: 50,
+          width: 160,
           decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey[300]!, width: 1),
-            borderRadius: BorderRadius.circular(27),
+            border: Border.all(color: Colors.grey[300]!, width: 2),
+            borderRadius: BorderRadius.circular(30),
             color: Colors.white,
           ),
           child: IconButton(
