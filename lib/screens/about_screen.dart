@@ -294,7 +294,7 @@ class _AboutScreenState extends State<AboutScreen>
               right: 60,
               child: Container(
                 width: 300,
-                height: 400,
+                height: 1400,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
@@ -314,14 +314,14 @@ class _AboutScreenState extends State<AboutScreen>
             // 좌측 하단에 텍스트 배치
             Positioned(
               bottom: 40,
-              left: 200,
+              left: 350,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     'ABOUT 할두',
                     style: GoogleFonts.notoSans(
-                      fontSize: 78,
+                      fontSize: 88,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),
