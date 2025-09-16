@@ -189,7 +189,7 @@ class _ContentsScreenState extends State<ContentsScreen> {
       childAspectRatio: 0.75,
       children: [
         _buildContentCard(
-          'assets/images/hero_image_1.jpg',
+          'assets/images/grandmother.jpg',
           '클럽',
           '할두 이모작 캠프 in 경주',
           '할두\n이모작 캠프\nin 경주',
@@ -197,7 +197,7 @@ class _ContentsScreenState extends State<ContentsScreen> {
           '0',
         ),
         _buildContentCard(
-          'assets/images/hero_image_2.jpg',
+          'assets/images/grandmother.jpg',
           '꿀팁',
           '더운 여름 준비템 편한 속옷 추천 5가지',
           '더운 여름 준비템\n편한 속옷 추천\n5가지',
@@ -213,7 +213,7 @@ class _ContentsScreenState extends State<ContentsScreen> {
           '0',
         ),
         _buildContentCard(
-          'assets/images/hero_image_1.jpg',
+          'assets/images/grandmother.jpg',
           '아이템',
           '할두 여름 바지 컬렉션',
           '이모는 3컬러 중에\n뭐가 1위예요~?',
