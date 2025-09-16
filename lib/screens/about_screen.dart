@@ -255,119 +255,157 @@ class _AboutScreenState extends State<AboutScreen> {
 
   Widget _buildGrandmotherSection() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 700, vertical: 80),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text(
-            '할머니가 되어서도 두근두근',
-            style: GoogleFonts.notoSans(
-              fontSize: 32,
-              fontWeight: FontWeight.bold,
-              color: Colors.black87,
-            ),
-            textAlign: TextAlign.right,
-          ),
-          const SizedBox(height: 40),
-          Row(
-            children: [
-              Expanded(
-                flex: 2,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildActivityItem(
-                      '1',
-                      '할두 클럽',
-                      '건강한 습관을 형성하고 소속감을 느낄 수 있는 공간입니다. '
-                          '정기적인 모임을 통해 치매 예방 활동에 참여하세요.',
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(vertical: 80),
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 1200),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 40),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Center(
+                  child: Text(
+                    '할머니가 되어서도 두근두근',
+                    style: GoogleFonts.notoSans(
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
                     ),
-                    const SizedBox(height: 30),
-                    _buildActivityItem(
-                      '2',
-                      '자기탐구 학습지',
-                      '자아를 발견하고 자존감을 향상시키는 다양한 학습 자료를 제공합니다. '
-                          '두뇌를 자극하는 활동으로 인지 기능을 강화하세요.',
-                    ),
-                    const SizedBox(height: 30),
-                    _buildActivityItem(
-                      '3',
-                      '건강 정보, 상품 제공',
-                      '신뢰할 수 있는 건강 정보와 삶의 질을 높이는 상품을 제공합니다. '
-                          '전문가가 검증한 정보로 건강한 삶을 유지하세요.',
-                    ),
-                  ],
+                    textAlign: TextAlign.center,
+                  ),
                 ),
-              ),
-              const SizedBox(width: 40),
-              Expanded(
-                flex: 1,
-                child: Container(
-                  height: 300,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    image: const DecorationImage(
-                      image: AssetImage('assets/images/hero_image_2.jpg'),
-                      fit: BoxFit.cover,
+                const SizedBox(height: 60),
+                Center(
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 800),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Center(
+                          child: _buildActivityItem(
+                            '1',
+                            '할두 클럽',
+                            '건강한 습관을 형성하고 소속감을 느낄 수 있는 공간입니다. '
+                                '정기적인 모임을 통해 치매 예방 활동에 참여하세요.',
+                          ),
+                        ),
+                        const SizedBox(height: 30),
+                        Center(
+                          child: _buildActivityItem(
+                            '2',
+                            '자기탐구 학습지',
+                            '자아를 발견하고 자존감을 향상시키는 다양한 학습 자료를 제공합니다. '
+                                '두뇌를 자극하는 활동으로 인지 기능을 강화하세요.',
+                          ),
+                        ),
+                        const SizedBox(height: 30),
+                        Center(
+                          child: _buildActivityItem(
+                            '3',
+                            '건강 정보, 상품 제공',
+                            '신뢰할 수 있는 건강 정보와 삶의 질을 높이는 상품을 제공합니다. '
+                                '전문가가 검증한 정보로 건강한 삶을 유지하세요.',
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
-              ),
-            ],
+                const SizedBox(height: 60),
+                Center(
+                  child: Container(
+                    width: 400,
+                    height: 300,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      image: const DecorationImage(
+                        image: AssetImage('assets/images/hero_image_2.jpg'),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
-        ],
+        ),
       ),
     );
   }
 
   Widget _buildActivityItem(String number, String title, String description) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          width: 30,
-          height: 30,
+    return Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 600),
+        child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: const Color(0xFF2ECC71),
-            borderRadius: BorderRadius.circular(15),
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.grey[300]!),
           ),
-          child: Center(
-            child: Text(
-              number,
-              style: GoogleFonts.notoSans(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(width: 16),
-        Expanded(
-          child: Column(
+          child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                title,
-                style: GoogleFonts.notoSans(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
+              Container(
+                width: 30,
+                height: 30,
+                decoration: BoxDecoration(
+                  color: const Color(0xFF2ECC71),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Center(
+                  child: Text(
+                    number,
+                    style: GoogleFonts.notoSans(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
                 ),
               ),
-              const SizedBox(height: 8),
-              Text(
-                description,
-                style: GoogleFonts.notoSans(
-                  fontSize: 14,
-                  color: Colors.grey[600],
-                  height: 1.5,
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Center(
+                      child: Text(
+                        title,
+                        style: GoogleFonts.notoSans(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Center(
+                      child: Text(
+                        description,
+                        style: GoogleFonts.notoSans(
+                          fontSize: 14,
+                          color: Colors.grey[600],
+                          height: 1.5,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
           ),
         ),
-      ],
+      ),
     );
   }
 
