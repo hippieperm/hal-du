@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../widgets/app_bar_widget.dart';
 import '../widgets/footer_widget.dart';
+import 'dart:math' as math;
 
 class AboutScreen extends StatefulWidget {
   const AboutScreen({super.key});
@@ -10,20 +11,83 @@ class AboutScreen extends StatefulWidget {
   State<AboutScreen> createState() => _AboutScreenState();
 }
 
-class _AboutScreenState extends State<AboutScreen> {
+class _AboutScreenState extends State<AboutScreen>
+    with TickerProviderStateMixin {
   final ScrollController _scrollController = ScrollController();
   bool _isAppBarTransparent = false;
+
+  late AnimationController _fadeController1;
+  late AnimationController _fadeController2;
+  late AnimationController _fadeController3;
+  late AnimationController _fadeController4;
+  late AnimationController _fadeController5;
+
+  late Animation<double> _fadeAnimation1;
+  late Animation<double> _fadeAnimation2;
+  late Animation<double> _fadeAnimation3;
+  late Animation<double> _fadeAnimation4;
+  late Animation<double> _fadeAnimation5;
+
+  final GlobalKey _section1Key = GlobalKey();
+  final GlobalKey _section2Key = GlobalKey();
+  final GlobalKey _section3Key = GlobalKey();
+  final GlobalKey _section4Key = GlobalKey();
+  final GlobalKey _section5Key = GlobalKey();
 
   @override
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
+
+    // 애니메이션 컨트롤러 초기화
+    _fadeController1 = AnimationController(
+      duration: const Duration(milliseconds: 200),
+      vsync: this,
+    );
+    _fadeController2 = AnimationController(
+      duration: const Duration(milliseconds: 200),
+      vsync: this,
+    );
+    _fadeController3 = AnimationController(
+      duration: const Duration(milliseconds: 200),
+      vsync: this,
+    );
+    _fadeController4 = AnimationController(
+      duration: const Duration(milliseconds: 200),
+      vsync: this,
+    );
+    _fadeController5 = AnimationController(
+      duration: const Duration(milliseconds: 200),
+      vsync: this,
+    );
+
+    // 애니메이션 생성
+    _fadeAnimation1 = Tween<double>(begin: 0.0, end: 1.0).animate(
+        CurvedAnimation(parent: _fadeController1, curve: Curves.easeOut));
+    _fadeAnimation2 = Tween<double>(begin: 0.0, end: 1.0).animate(
+        CurvedAnimation(parent: _fadeController2, curve: Curves.easeOut));
+    _fadeAnimation3 = Tween<double>(begin: 0.0, end: 1.0).animate(
+        CurvedAnimation(parent: _fadeController3, curve: Curves.easeOut));
+    _fadeAnimation4 = Tween<double>(begin: 0.0, end: 1.0).animate(
+        CurvedAnimation(parent: _fadeController4, curve: Curves.easeOut));
+    _fadeAnimation5 = Tween<double>(begin: 0.0, end: 1.0).animate(
+        CurvedAnimation(parent: _fadeController5, curve: Curves.easeOut));
+
+    // 초기 애니메이션 실행
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkVisibility();
+    });
   }
 
   @override
   void dispose() {
     _scrollController.removeListener(_onScroll);
     _scrollController.dispose();
+    _fadeController1.dispose();
+    _fadeController2.dispose();
+    _fadeController3.dispose();
+    _fadeController4.dispose();
+    _fadeController5.dispose();
     super.dispose();
   }
 
@@ -31,6 +95,51 @@ class _AboutScreenState extends State<AboutScreen> {
     setState(() {
       _isAppBarTransparent = _scrollController.offset < 50;
     });
+    _checkVisibility();
+  }
+
+  void _checkVisibility() {
+    final keys = [
+      _section1Key,
+      _section2Key,
+      _section3Key,
+      _section4Key,
+      _section5Key
+    ];
+    final controllers = [
+      _fadeController1,
+      _fadeController2,
+      _fadeController3,
+      _fadeController4,
+      _fadeController5
+    ];
+
+    for (int i = 0; i < keys.length; i++) {
+      final keyContext = keys[i].currentContext;
+      if (keyContext != null) {
+        final box = keyContext.findRenderObject() as RenderBox?;
+        if (box != null) {
+          final position = box.localToGlobal(Offset.zero);
+          final size = box.size;
+          final screenHeight = MediaQuery.of(context).size.height;
+
+          // 요소가 화면에 보이는지 확인 (10% 이상 보일 때 애니메이션 시작)
+          final elementTop = position.dy;
+          final elementBottom = position.dy + size.height;
+          final visibleTop = math.max(0, -elementTop);
+          final visibleBottom =
+              math.min(size.height, screenHeight - elementTop);
+          final visibleHeight = visibleBottom - visibleTop;
+          final visibilityRatio = visibleHeight / size.height;
+
+          if (visibilityRatio > 0.1 && !controllers[i].isCompleted) {
+            controllers[i].forward();
+          } else if (visibilityRatio <= 0.05 && controllers[i].isCompleted) {
+            controllers[i].reverse();
+          }
+        }
+      }
+    }
   }
 
   void _onItemTapped(int index) {
@@ -58,20 +167,80 @@ class _AboutScreenState extends State<AboutScreen> {
             child: Column(
               children: [
                 _buildHeroSection(),
-                _buildGrandmotherSection(),
+                AnimatedBuilder(
+                  animation: _fadeAnimation1,
+                  builder: (context, child) {
+                    return Transform.translate(
+                      offset: Offset(0, 20 * (1 - _fadeAnimation1.value)),
+                      child: Opacity(
+                        opacity: _fadeAnimation1.value,
+                        key: _section1Key,
+                        child: _buildGrandmotherSection(),
+                      ),
+                    );
+                  },
+                ),
                 Padding(
                   padding: EdgeInsetsGeometry.symmetric(
                     horizontal: 400,
                   ),
                   child: Column(
                     children: [
-                      _buildHaldoStorySection(),
-                      _buildHaldoHereSection(),
-                      _buildCommunitySection(),
+                      AnimatedBuilder(
+                        animation: _fadeAnimation2,
+                        builder: (context, child) {
+                          return Transform.translate(
+                            offset: Offset(0, 20 * (1 - _fadeAnimation2.value)),
+                            child: Opacity(
+                              opacity: _fadeAnimation2.value,
+                              key: _section2Key,
+                              child: _buildHaldoStorySection(),
+                            ),
+                          );
+                        },
+                      ),
+                      AnimatedBuilder(
+                        animation: _fadeAnimation3,
+                        builder: (context, child) {
+                          return Transform.translate(
+                            offset: Offset(0, 20 * (1 - _fadeAnimation3.value)),
+                            child: Opacity(
+                              opacity: _fadeAnimation3.value,
+                              key: _section3Key,
+                              child: _buildHaldoHereSection(),
+                            ),
+                          );
+                        },
+                      ),
+                      AnimatedBuilder(
+                        animation: _fadeAnimation4,
+                        builder: (context, child) {
+                          return Transform.translate(
+                            offset: Offset(0, 20 * (1 - _fadeAnimation4.value)),
+                            child: Opacity(
+                              opacity: _fadeAnimation4.value,
+                              key: _section4Key,
+                              child: _buildCommunitySection(),
+                            ),
+                          );
+                        },
+                      ),
                     ],
                   ),
                 ),
-                const FooterWidget(),
+                AnimatedBuilder(
+                  animation: _fadeAnimation5,
+                  builder: (context, child) {
+                    return Transform.translate(
+                      offset: Offset(0, 20 * (1 - _fadeAnimation5.value)),
+                      child: Opacity(
+                        opacity: _fadeAnimation5.value,
+                        key: _section5Key,
+                        child: const FooterWidget(),
+                      ),
+                    );
+                  },
+                ),
               ],
             ),
           ),
@@ -178,7 +347,7 @@ class _AboutScreenState extends State<AboutScreen> {
 
   Widget _buildHaldoStorySection() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 80),
+      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -190,7 +359,6 @@ class _AboutScreenState extends State<AboutScreen> {
               color: const Color(0xFF2ECC71),
             ),
           ),
-          const SizedBox(height: 20),
           Text(
             '대한민국 중년 여성의 건강한 인생 2막이 시작되는 곳',
             style: GoogleFonts.notoSans(
@@ -256,7 +424,6 @@ class _AboutScreenState extends State<AboutScreen> {
   Widget _buildGrandmotherSection() {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(vertical: 80),
       child: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 1200),
@@ -266,6 +433,7 @@ class _AboutScreenState extends State<AboutScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                SizedBox(height: 170),
                 Center(
                   child: Text(
                     '할머니가 되어서도 두근두근',
@@ -277,13 +445,21 @@ class _AboutScreenState extends State<AboutScreen> {
                     textAlign: TextAlign.center,
                   ),
                 ),
-                const SizedBox(height: 60),
+                const SizedBox(height: 40),
                 Center(
                   child: ConstrainedBox(
                     constraints: const BoxConstraints(maxWidth: 800),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 30),
+                Row(
+                  children: [
+                    Column(
                       children: [
                         Center(
                           child: _buildActivityItem(
@@ -293,7 +469,7 @@ class _AboutScreenState extends State<AboutScreen> {
                                 '정기적인 모임을 통해 치매 예방 활동에 참여하세요.',
                           ),
                         ),
-                        const SizedBox(height: 30),
+                        const SizedBox(height: 20),
                         Center(
                           child: _buildActivityItem(
                             '2',
@@ -302,7 +478,7 @@ class _AboutScreenState extends State<AboutScreen> {
                                 '두뇌를 자극하는 활동으로 인지 기능을 강화하세요.',
                           ),
                         ),
-                        const SizedBox(height: 30),
+                        const SizedBox(height: 20),
                         Center(
                           child: _buildActivityItem(
                             '3',
@@ -310,24 +486,22 @@ class _AboutScreenState extends State<AboutScreen> {
                             '신뢰할 수 있는 건강 정보와 삶의 질을 높이는 상품을 제공합니다. '
                                 '전문가가 검증한 정보로 건강한 삶을 유지하세요.',
                           ),
-                        ),
+                        )
                       ],
                     ),
-                  ),
-                ),
-                const SizedBox(height: 60),
-                Center(
-                  child: Container(
-                    width: 400,
-                    height: 300,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      image: const DecorationImage(
-                        image: AssetImage('assets/images/hero_image_2.jpg'),
-                        fit: BoxFit.cover,
+                    SizedBox(width: 30),
+                    Container(
+                      width: 400,
+                      height: 400,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        image: const DecorationImage(
+                          image: AssetImage('assets/images/grandmother.jpg'),
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
               ],
             ),
