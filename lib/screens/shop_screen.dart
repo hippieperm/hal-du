@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../widgets/app_bar_widget.dart';
 import '../widgets/footer_widget.dart';
 import '../services/auth_service.dart';
+import '../services/product_service.dart';
 import '../widgets/admin/product_management_dialog.dart';
 import '../models/product_model.dart';
 
@@ -129,11 +130,28 @@ class _ShopScreenState extends State<ShopScreen> {
                       showDialog(
                         context: context,
                         builder: (context) => ProductManagementDialog(
-                          onSave: (product) {
-                            // TODO: Firebase에 상품 저장
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('상품이 등록되었습니다')),
-                            );
+                          onSave: (product) async {
+                            final productService = Provider.of<ProductService>(context, listen: false);
+                            final success = await productService.addProduct(product);
+                            if (success) {
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('상품이 등록되었습니다'),
+                                    backgroundColor: Colors.green,
+                                  ),
+                                );
+                              }
+                            } else {
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(productService.errorMessage ?? '상품 등록에 실패했습니다'),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                              }
+                            }
                           },
                         ),
                       );
@@ -206,123 +224,50 @@ class _ShopScreenState extends State<ShopScreen> {
   }
 
   Widget _buildProductGrid() {
-    return GridView.count(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      crossAxisCount: 4,
-      crossAxisSpacing: 15,
-      mainAxisSpacing: 25,
-      childAspectRatio: 0.65,
-      children: [
-        _buildProductCard(
-          'assets/images/grandmother.jpg',
-          '낙담 줄인 내천함 헤어 (50대 60대 점감 세이 향감 5마)',
-          '33,000원',
-          '할두 줄인 내천함 헤어 (50대 60대 점감 세이 향감 5마)',
-          true,
-          false,
-        ),
-        _buildProductCard(
-          'assets/images/grandmother.jpg',
-          '마행하지 감동되는 굉가 ( 50대 60대 종감은 감감 종점 )',
-          '10,000원',
-          '마행하지 감동되는 굉가 ( 50대 60대 종감은 감감 종점 )',
-          true,
-          false,
-        ),
-        _buildProductCard(
-          'assets/images/grandmother.jpg',
-          '[해기가히] 실가되는 챗감리 내인네 - 사진집',
-          '82,000원',
-          '[해기가히] 실가되는 챗감리 내인네 - 사진집',
-          false,
-          true,
-        ),
-        _buildProductCard(
-          'assets/images/grandmother.jpg',
-          '[진문가히] 실가가쓸 챠품리 내인네 - 촘벽 신성',
-          '12,000원',
-          '[진문가히] 실가가쓸 챠품리 내인네 - 촘벽 신성',
-          false,
-          false,
-        ),
-        _buildProductCard(
-          'assets/images/grandmother.jpg',
-          '할무 재단 클럽 특기 쇠은 (50대 60대 여성 미은 감봘아는 대회)',
-          '32,000원',
-          '촌가탁 팹이 춰에 숙솟 발줍이아!',
-          false,
-          false,
-        ),
-        _buildProductCard(
-          'assets/images/grandmother.jpg',
-          '[미이] 쇠이 졟어나 하리와 플로 시쇼 여가영 선이 완성되장',
-          '13,000원',
-          '[미이] 쇠이 졟어나 하리와 플로 시쇼',
-          false,
-          false,
-        ),
-        _buildProductCard(
-          'assets/images/grandmother.jpg',
-          '[미이] 멜간과 다리멜간 될줄 시쓸나 신감 아이야간 멀이 젓이 이촘',
-          '25,000원',
-          '[미이] 멜간과 다리멜간 될줄 시쓸나',
-          false,
-          false,
-        ),
-        _buildProductCard(
-          'assets/images/grandmother.jpg',
-          '[우니] 메에하네이 나시, 멤을 줄영은 서별한 서가 아웅 웝이 아이야 신영',
-          '14,800원',
-          '[우니] 메에하네이 나시, 멤을 줄영은 서별한',
-          false,
-          false,
-        ),
-        _buildProductCard(
-          'assets/images/grandmother.jpg',
-          '메즉 쇠애는 질이 십아내 할두 촘능은 4가 났이 누는 논이 촉고 넬갈 작영',
-          '76,000원',
-          '메즉 쇠애는 질이 십아내 할두 촘능은 4가',
-          false,
-          false,
-        ),
-        _buildProductCard(
-          'assets/images/grandmother.jpg',
-          '사기능타 나기가능 완도 시간 활량 셸링 (50대 60대 나기 모양)',
-          '30,000원',
-          '사기능타 나기가능 완도 시간 활량 셸링',
-          false,
-          false,
-        ),
-        // 추가 상품들 (이미지와 동일하게 더 많은 상품)
-        _buildProductCard(
-          'assets/images/grandmother.jpg',
-          '메즉 쇠애는 질이 십아내 할두 촘능은 4가',
-          '33,000원',
-          '할무 제단 클럽',
-          false,
-          false,
-        ),
-        _buildProductCard(
-          'assets/images/grandmother.jpg',
-          '[50년] 우리 호어 30가 아인 더더 호어수들',
-          '10,000원',
-          '촌가히 팹이\n등대 숙영 말봅이야!',
-          true,
-          false,
-        ),
-      ],
+    return Consumer<ProductService>(
+      builder: (context, productService, child) {
+        final products = productService.getProductsByCategory(_selectedCategory);
+        
+        if (productService.isLoading) {
+          return const Center(
+            child: CircularProgressIndicator(
+              color: Color(0xFF00C853),
+            ),
+          );
+        }
+        
+        if (products.isEmpty) {
+          return Center(
+            child: Text(
+              '상품이 없습니다',
+              style: GoogleFonts.notoSans(
+                fontSize: 18,
+                color: Colors.grey[600],
+              ),
+            ),
+          );
+        }
+        
+        return GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 4,
+            crossAxisSpacing: 15,
+            mainAxisSpacing: 25,
+            childAspectRatio: 0.65,
+          ),
+          itemCount: products.length,
+          itemBuilder: (context, index) {
+            final product = products[index];
+            return _buildProductCard(product);
+          },
+        );
+      },
     );
   }
 
-  Widget _buildProductCard(
-    String imagePath,
-    String description,
-    String price,
-    String title,
-    bool isHot,
-    bool hasSpecialTag,
-  ) {
+  Widget _buildProductCard(Product product) {
     final authService = Provider.of<AuthService>(context);
     final isAdmin = authService.isAdmin;
     
@@ -336,25 +281,52 @@ class _ShopScreenState extends State<ShopScreen> {
           showDialog(
             context: context,
             builder: (context) => ProductManagementDialog(
-              product: Product(
-                id: DateTime.now().millisecondsSinceEpoch.toString(),
-                name: title,
-                price: double.tryParse(price.replaceAll(',', '').replaceAll('원', '')) ?? 0,
-                description: description,
-                imageUrl: imagePath,
-                category: '전체',
-              ),
-              onSave: (product) {
-                // TODO: Firebase에 상품 업데이트
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('상품이 수정되었습니다')),
-                );
+              product: product,
+              onSave: (updatedProduct) async {
+                final productService = Provider.of<ProductService>(context, listen: false);
+                final success = await productService.updateProduct(updatedProduct);
+                if (success) {
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('상품이 수정되었습니다'),
+                        backgroundColor: Colors.green,
+                      ),
+                    );
+                  }
+                } else {
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(productService.errorMessage ?? '상품 수정에 실패했습니다'),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  }
+                }
               },
-              onDelete: () {
-                // TODO: Firebase에서 상품 삭제
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('상품이 삭제되었습니다')),
-                );
+              onDelete: () async {
+                final productService = Provider.of<ProductService>(context, listen: false);
+                final success = await productService.deleteProduct(product.id);
+                if (success) {
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('상품이 삭제되었습니다'),
+                        backgroundColor: Colors.green,
+                      ),
+                    );
+                  }
+                } else {
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(productService.errorMessage ?? '상품 삭제에 실패했습니다'),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  }
+                }
               },
             ),
           );
@@ -377,193 +349,119 @@ class _ShopScreenState extends State<ShopScreen> {
               children: [
                 // 이미지 섹션
                 AspectRatio(
-                aspectRatio: 1.0,
-                child: Stack(
-                  children: [
-                    // 배경 이미지
-                    Container(
-                      width: double.infinity,
-                      height: double.infinity,
-                      decoration: BoxDecoration(
-                        color: Colors.grey[200],
-                        image: DecorationImage(
-                          image: AssetImage(imagePath),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-
-                    // 이미지 위 오버레이 텍스트
-                    Positioned.fill(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [
-                              Colors.black.withValues(alpha: 0.2),
-                              Colors.black.withValues(alpha: 0.6),
-                            ],
-                          ),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(12),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                title,
-                                style: GoogleFonts.notoSans(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                  height: 1.2,
-                                ),
-                                textAlign: TextAlign.center,
-                                maxLines: 3,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-
-                    // HOT 태그
-                    if (isHot)
-                      Positioned(
-                        top: 8,
-                        left: 8,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 6, vertical: 3),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF2ECC71),
-                            borderRadius: BorderRadius.circular(3),
-                          ),
-                          child: Text(
-                            'HOT',
-                            style: GoogleFonts.notoSans(
-                              fontSize: 9,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
-
-                    // 할두 태그
-                    if (hasSpecialTag)
-                      Positioned(
-                        bottom: 8,
-                        right: 8,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 6, vertical: 3),
-                          decoration: BoxDecoration(
-                            color: Colors.orange,
-                            borderRadius: BorderRadius.circular(3),
-                          ),
-                          child: Text(
-                            '할두',
-                            style: GoogleFonts.notoSans(
-                              fontSize: 9,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
-                    
-                    // 관리자 편집 아이콘
-                    if (isAdmin)
-                      Positioned(
-                        top: 8,
-                        right: 8,
-                        child: Container(
-                          padding: const EdgeInsets.all(4),
-                          decoration: BoxDecoration(
-                            color: Colors.black.withValues(alpha: 0.7),
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(
-                            Icons.edit,
-                            size: 16,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-
-              // 하단 정보 섹션
-              Expanded(
-                child: Container(
-                  color: Colors.white,
-                  padding: const EdgeInsets.all(8),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
+                  aspectRatio: 1.0,
+                  child: Stack(
                     children: [
-                      // 설명
-                      Flexible(
-                        child: Text(
-                          description,
-                          style: GoogleFonts.notoSans(
-                            fontSize: 10,
-                            color: Colors.black87,
-                            height: 1.2,
+                      // 배경 이미지
+                      Container(
+                        width: double.infinity,
+                        height: double.infinity,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          image: DecorationImage(
+                            image: AssetImage(product.imageUrl),
+                            fit: BoxFit.cover,
                           ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      const SizedBox(height: 4),
 
-                      // 가격
-                      Text(
-                        price,
-                        style: GoogleFonts.notoSans(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black87,
+                      // 이미지 위 오버레이 텍스트
+                      Positioned.fill(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                                Colors.black.withValues(alpha: 0.2),
+                                Colors.black.withValues(alpha: 0.6),
+                              ],
+                            ),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(12),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  product.name,
+                                  style: GoogleFonts.notoSans(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                    height: 1.2,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                  maxLines: 3,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                       ),
-                      const Spacer(),
 
-                      // 좋아요 및 조회수
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.favorite_border,
-                            size: 11,
-                            color: Colors.grey[500],
-                          ),
-                          const SizedBox(width: 2),
-                          Text(
-                            '0',
-                            style: GoogleFonts.notoSans(
-                              fontSize: 9,
-                              color: Colors.grey[600],
+                      // 관리자 편집 아이콘
+                      if (isAdmin)
+                        Positioned(
+                          top: 8,
+                          right: 8,
+                          child: Container(
+                            padding: const EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              color: Colors.black.withValues(alpha: 0.7),
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(
+                              Icons.edit,
+                              size: 16,
+                              color: Colors.white,
                             ),
                           ),
-                          const SizedBox(width: 8),
-                          Text(
-                            '조회 10',
-                            style: GoogleFonts.notoSans(
-                              fontSize: 9,
-                              color: Colors.grey[600],
-                            ),
-                          ),
-                        ],
-                      ),
+                        ),
                     ],
                   ),
                 ),
-              ),
-            ],
-          ),
+
+                // 하단 정보 섹션
+                Expanded(
+                  child: Container(
+                    color: Colors.white,
+                    padding: const EdgeInsets.all(8),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        // 설명
+                        Flexible(
+                          child: Text(
+                            product.description,
+                            style: GoogleFonts.notoSans(
+                              fontSize: 10,
+                              color: Colors.black87,
+                              height: 1.2,
+                            ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+
+                        // 가격
+                        Text(
+                          '${product.price.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')}원',
+                          style: GoogleFonts.notoSans(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: const Color(0xFF2ECC71),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -10,6 +10,7 @@ import 'screens/shop_screen.dart';
 import 'screens/product_detail_screen.dart';
 import 'screens/content_detail_screen.dart';
 import 'services/auth_service.dart';
+import 'services/product_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,8 +21,11 @@ void main() async {
   );
   
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => AuthService(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => AuthService()),
+        ChangeNotifierProvider(create: (context) => ProductService()),
+      ],
       child: const HaldoApp(),
     ),
   );
