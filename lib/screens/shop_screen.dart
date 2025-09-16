@@ -426,16 +426,73 @@ class _ShopScreenState extends State<ShopScreen> {
                         Positioned(
                           top: 8,
                           right: 8,
-                          child: Container(
-                            padding: const EdgeInsets.all(4),
-                            decoration: BoxDecoration(
-                              color: Colors.black.withValues(alpha: 0.7),
-                              shape: BoxShape.circle,
-                            ),
-                            child: const Icon(
-                              Icons.edit,
-                              size: 16,
-                              color: Colors.white,
+                          child: GestureDetector(
+                            onTap: () {
+                              // 상품 상세 페이지로의 이동을 막고 편집 다이얼로그만 열기
+                              showDialog(
+                                context: context,
+                                builder: (context) => ProductManagementDialog(
+                                  product: product,
+                                  onSave: (updatedProduct) async {
+                                    final productService = Provider.of<ProductService>(context, listen: false);
+                                    final success = await productService.updateProduct(updatedProduct);
+                                    if (success) {
+                                      if (context.mounted) {
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          const SnackBar(
+                                            content: Text('상품이 수정되었습니다'),
+                                            backgroundColor: Colors.green,
+                                          ),
+                                        );
+                                      }
+                                    } else {
+                                      if (context.mounted) {
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          SnackBar(
+                                            content: Text(productService.errorMessage ?? '상품 수정에 실패했습니다'),
+                                            backgroundColor: Colors.red,
+                                          ),
+                                        );
+                                      }
+                                    }
+                                  },
+                                  onDelete: () async {
+                                    final productService = Provider.of<ProductService>(context, listen: false);
+                                    final success = await productService.deleteProduct(product.id);
+                                    if (success) {
+                                      if (context.mounted) {
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          const SnackBar(
+                                            content: Text('상품이 삭제되었습니다'),
+                                            backgroundColor: Colors.green,
+                                          ),
+                                        );
+                                      }
+                                    } else {
+                                      if (context.mounted) {
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          SnackBar(
+                                            content: Text(productService.errorMessage ?? '상품 삭제에 실패했습니다'),
+                                            backgroundColor: Colors.red,
+                                          ),
+                                        );
+                                      }
+                                    }
+                                  },
+                                ),
+                              );
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(4),
+                              decoration: BoxDecoration(
+                                color: Colors.black.withValues(alpha: 0.7),
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                Icons.edit,
+                                size: 16,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
                         ),
