@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'signup_dialog.dart';
+import 'login_dialog.dart';
+import '../services/auth_service.dart';
 
 class AppBarWidget extends StatefulWidget {
   final int selectedIndex;
@@ -85,38 +88,86 @@ class _AppBarWidgetState extends State<AppBarWidget> {
             // 우측 버튼들
             Row(
               children: [
-                TextButton(
-                  onPressed: () {
-                    // 로그인 기능
+                Consumer<AuthService>(
+                  builder: (context, authService, _) {
+                    if (authService.isLoggedIn) {
+                      return Row(
+                        children: [
+                          Text(
+                            '${authService.currentUser?.name ?? ''}님',
+                            style: GoogleFonts.notoSans(
+                              color: widget.isTransparent
+                                  ? Colors.white
+                                  : Colors.black87,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          TextButton(
+                            onPressed: () async {
+                              await authService.logout();
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(content: Text('로그아웃되었습니다.')),
+                                );
+                              }
+                            },
+                            child: Text(
+                              '로그아웃',
+                              style: GoogleFonts.notoSans(
+                                color: widget.isTransparent
+                                    ? Colors.white.withValues(alpha: 0.9)
+                                    : Colors.black87,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    } else {
+                      return Row(
+                        children: [
+                          TextButton(
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) => const LoginDialog(),
+                              );
+                            },
+                            child: Text(
+                              '로그인',
+                              style: GoogleFonts.notoSans(
+                                color: widget.isTransparent
+                                    ? Colors.white.withValues(alpha: 0.9)
+                                    : Colors.black87,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          TextButton(
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) => const SignupDialog(),
+                              );
+                            },
+                            child: Text(
+                              '회원가입',
+                              style: GoogleFonts.notoSans(
+                                color: widget.isTransparent
+                                    ? Colors.white
+                                    : Colors.black87,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    }
                   },
-                  child: Text(
-                    '로그인',
-                    style: GoogleFonts.notoSans(
-                      color: widget.isTransparent
-                          ? Colors.white.withValues(alpha: 0.9)
-                          : Colors.black87,
-                      fontSize: 16,
-                    ),
-                  ),
                 ),
-                const SizedBox(width: 12),
-                TextButton(
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) => const SignupDialog(),
-                    );
-                  },
-                  child: Text(
-                    '회원가입',
-                    style: GoogleFonts.notoSans(
-                      color:
-                          widget.isTransparent ? Colors.white : Colors.black87,
-                      fontSize: 14,
-                    ),
-                  ),
-                ),
-
                 const SizedBox(width: 12),
                 TextButton(
                   onPressed: () {},

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'terms_dialog.dart';
+import '../services/auth_service.dart';
 
 class SignupDialog extends StatefulWidget {
   const SignupDialog({super.key});
@@ -48,13 +50,34 @@ class _SignupDialogState extends State<SignupDialog> {
     });
   }
 
-  void _submitSignup() {
+  void _submitSignup() async {
     if (_formKey.currentState!.validate()) {
-      // 회원가입 로직 구현
-      Navigator.of(context).pop();
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('회원가입이 완료되었습니다.')),
+      final authService = Provider.of<AuthService>(context, listen: false);
+
+      final success = await authService.signUp(
+        email: _emailController.text,
+        password: _passwordController.text,
+        name: _nameController.text,
+        phone: _contactController.text,
       );
+
+      if (success) {
+        if (mounted) {
+          Navigator.of(context).pop();
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('회원가입이 완료되었습니다.')),
+          );
+        }
+      } else {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(authService.errorMessage ?? '회원가입에 실패했습니다.'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
     }
   }
 

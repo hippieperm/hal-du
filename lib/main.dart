@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'screens/home_screen.dart';
 import 'screens/about_screen.dart';
 import 'screens/contents_screen.dart';
 import 'screens/shop_screen.dart';
 import 'screens/product_detail_screen.dart';
+import 'services/auth_service.dart';
 
 void main() {
-  runApp(const HaldoApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => AuthService(),
+      child: const HaldoApp(),
+    ),
+  );
 }
 
 class HaldoApp extends StatelessWidget {
