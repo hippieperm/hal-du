@@ -348,76 +348,106 @@ class _AboutScreenState extends State<AboutScreen>
 
   Widget _buildHaldoStorySection() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Haldo\'s Story',
-            style: GoogleFonts.notoSans(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: const Color(0xFF2ECC71),
-            ),
-          ),
-          Text(
-            '대한민국 중년 여성의 건강한 인생 2막이 시작되는 곳',
-            style: GoogleFonts.notoSans(
-              fontSize: 32,
-              fontWeight: FontWeight.bold,
-              color: Colors.black87,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 40),
-          Text(
-            '할두는 중년 여성들의 건강한 삶을 응원하는 커뮤니티입니다. '
-            '우리는 모든 여성이 나이에 상관없이 자신만의 가치를 발견하고, '
-            '건강하고 행복한 삶을 살 수 있다고 믿습니다.',
-            style: GoogleFonts.notoSans(
-              fontSize: 16,
-              color: Colors.grey[700],
-              height: 1.6,
-            ),
-          ),
-          const SizedBox(height: 20),
-          Text(
-            '특히 치매 예방과 인지 기능 향상에 중점을 두어, '
-            '두뇌 건강을 위한 다양한 활동과 프로그램을 제공합니다. '
-            '할두와 함께라면 중년의 삶이 더욱 풍요롭고 의미 있게 될 것입니다.',
-            style: GoogleFonts.notoSans(
-              fontSize: 16,
-              color: Colors.grey[700],
-              height: 1.6,
-            ),
-          ),
-          const SizedBox(height: 30),
-          Container(
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: const Color(0xFF2ECC71).withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Text(
-              '엄마가 치매면 어떡하지?',
-              style: GoogleFonts.notoSans(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                color: const Color(0xFF2ECC71),
+      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 80),
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 800),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Center(
+                child: Text(
+                  '대한민국 중년 여성의\n건강한 인생 2막이 시작되는 곳',
+                  style: GoogleFonts.notoSans(
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                    height: 1.4,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
               ),
-            ),
+              const SizedBox(height: 60),
+              Center(
+                child: Text(
+                  '어느 날,\n엄마가 방금 한 말을 처음하는 것처럼 또 하는 거예요.\n무서웠어요.',
+                  style: GoogleFonts.notoSans(
+                    fontSize: 17,
+                    color: Colors.grey[700],
+                    height: 1.8,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              const SizedBox(height: 40),
+              Center(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF2ECC71),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text(
+                    '엄마가 치매면 어떡하지?',
+                    style: GoogleFonts.notoSans(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 40),
+              Center(
+                child: Text(
+                  '그래서 바로 치매를 검색해봤어요.\n하지만 신뢰할 수 있는 정보가 거의 없더라고요.',
+                  style: GoogleFonts.notoSans(
+                    fontSize: 17,
+                    color: Colors.grey[700],
+                    height: 1.8,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              const SizedBox(height: 40),
+              Center(
+                child: Text(
+                  '그 때 알았어요.\n건강 관리가 더욱 중요해진 어른들을 위한 환경이\n충분히 구축되어 있지 않다는 것을요.',
+                  style: GoogleFonts.notoSans(
+                    fontSize: 17,
+                    color: Colors.grey[700],
+                    height: 1.8,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              const SizedBox(height: 40),
+              Center(
+                child: Text(
+                  '이제껏 열심히 달려온 어른들이\n앞으로의 인생 2막은\n건강하고, 다채롭게 살 수 있으면 좋겠어요.',
+                  style: GoogleFonts.notoSans(
+                    fontSize: 17,
+                    color: Colors.grey[700],
+                    height: 1.8,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              const SizedBox(height: 40),
+              Center(
+                child: Text(
+                  '이를 위해 할두는 중년의 건강과 삶의 질을 높이는\n대표적인 브랜드가 될 거예요.',
+                  style: GoogleFonts.notoSans(
+                    fontSize: 17,
+                    color: Colors.grey[700],
+                    height: 1.8,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 20),
-          Text(
-            '할두는 중년 여성의 건강과 삶의 질을 높이는 것을 목표로 합니다. '
-            '우리와 함께 건강한 인생 2막을 시작해보세요.',
-            style: GoogleFonts.notoSans(
-              fontSize: 16,
-              color: Colors.grey[700],
-              height: 1.6,
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
