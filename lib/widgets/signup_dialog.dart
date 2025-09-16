@@ -1,8 +1,41 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'terms_dialog.dart';
 import '../services/auth_service.dart';
+
+class PhoneNumberFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    // 숫자만 추출
+    String digitsOnly = newValue.text.replaceAll(RegExp(r'[^0-9]'), '');
+    
+    // 11자리 제한
+    if (digitsOnly.length > 11) {
+      digitsOnly = digitsOnly.substring(0, 11);
+    }
+    
+    String formatted = '';
+    if (digitsOnly.length >= 1) {
+      if (digitsOnly.length <= 3) {
+        formatted = digitsOnly;
+      } else if (digitsOnly.length <= 7) {
+        formatted = '${digitsOnly.substring(0, 3)}-${digitsOnly.substring(3)}';
+      } else {
+        formatted = '${digitsOnly.substring(0, 3)}-${digitsOnly.substring(3, 7)}-${digitsOnly.substring(7)}';
+      }
+    }
+    
+    return TextEditingValue(
+      text: formatted,
+      selection: TextSelection.collapsed(offset: formatted.length),
+    );
+  }
+}
 
 class SignupDialog extends StatefulWidget {
   const SignupDialog({super.key});
@@ -254,10 +287,20 @@ class _SignupDialogState extends State<SignupDialog> {
                       const SizedBox(height: 8),
                       _buildTextField(
                         controller: _contactController,
-                        hintText: '연락처',
+                        hintText: '010-0000-0000',
+                        keyboardType: TextInputType.phone,
+                        inputFormatters: [PhoneNumberFormatter()],
                         validator: (value) {
                           if (value?.isEmpty ?? true) {
                             return '연락처를 입력해주세요';
+                          }
+                          // 하이픈 제거 후 11자리 검증
+                          String digitsOnly = value!.replaceAll(RegExp(r'[^0-9]'), '');
+                          if (digitsOnly.length != 11) {
+                            return '올바른 휴대폰 번호를 입력해주세요';
+                          }
+                          if (!digitsOnly.startsWith('010')) {
+                            return '010으로 시작하는 번호를 입력해주세요';
                           }
                           return null;
                         },
@@ -390,11 +433,15 @@ class _SignupDialogState extends State<SignupDialog> {
     required String hintText,
     bool obscureText = false,
     String? Function(String?)? validator,
+    TextInputType? keyboardType,
+    List<TextInputFormatter>? inputFormatters,
   }) {
     return TextFormField(
       controller: controller,
       obscureText: obscureText,
       validator: validator,
+      keyboardType: keyboardType,
+      inputFormatters: inputFormatters,
       decoration: InputDecoration(
         hintText: hintText,
         hintStyle: GoogleFonts.notoSans(
