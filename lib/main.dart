@@ -7,7 +7,7 @@ import 'screens/contents_screen.dart';
 import 'screens/shop_screen.dart';
 import 'screens/product_detail_screen.dart';
 import 'services/auth_service.dart';
-//test
+
 void main() {
   runApp(
     ChangeNotifierProvider(
