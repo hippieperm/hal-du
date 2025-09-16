@@ -126,6 +126,26 @@ class _ShopScreenState extends State<ShopScreen> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   ElevatedButton.icon(
+                    onPressed: () async {
+                      final productService = Provider.of<ProductService>(context, listen: false);
+                      await productService.addSampleProducts();
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('샘플 상품이 추가되었습니다'),
+                            backgroundColor: Colors.blue,
+                          ),
+                        );
+                      }
+                    },
+                    icon: const Icon(Icons.data_array),
+                    label: const Text('샘플 추가'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  ElevatedButton.icon(
                     onPressed: () {
                       showDialog(
                         context: context,
