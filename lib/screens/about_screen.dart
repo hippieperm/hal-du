@@ -144,7 +144,7 @@ class _AboutScreenState extends State<AboutScreen> {
             // 좌측 하단에 텍스트 배치
             Positioned(
               bottom: 40,
-              left: 700,
+              left: 200,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -257,7 +257,7 @@ class _AboutScreenState extends State<AboutScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 700, vertical: 80),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
             '할머니가 되어서도 두근두근',
@@ -438,6 +438,7 @@ class _AboutScreenState extends State<AboutScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 80),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
             height: 300,
