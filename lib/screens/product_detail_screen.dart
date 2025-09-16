@@ -165,58 +165,110 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // 브레드크럼
+                // 상품명
+                Text(
+                  '마음까지 강화되는 요가 ( 50대 60대 온라인 요가 클래스 )',
+                  style: GoogleFonts.notoSans(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black87,
+                    height: 1.4,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                
+                // NEW 태그와 가격, 공유 버튼
                 Row(
                   children: [
-                    Text(
-                      '홈',
-                      style: GoogleFonts.notoSans(
-                        fontSize: 14,
-                        color: Colors.grey[600],
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF2ECC71),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Text(
+                        'NEW',
+                        style: GoogleFonts.notoSans(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
-                    const Icon(Icons.chevron_right,
-                        size: 16, color: Colors.grey),
-                    Text(
-                      '나눔시장',
-                      style: GoogleFonts.notoSans(
-                        fontSize: 14,
+                    const Spacer(),
+                    IconButton(
+                      onPressed: () {},
+                      icon: Icon(
+                        Icons.share_outlined,
                         color: Colors.grey[600],
+                        size: 20,
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 20),
-
-                // 상품명
-                Text(
-                  '[해기가히] 실가능은 챗감리 내인네 - 3권',
-                  style: GoogleFonts.notoSans(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87,
-                    height: 1.3,
-                  ),
-                ),
-                const SizedBox(height: 15),
+                const SizedBox(height: 10),
 
                 // 가격
                 Text(
-                  '82,000원',
+                  '10,000원',
                   style: GoogleFonts.notoSans(
-                    fontSize: 28,
+                    fontSize: 32,
                     fontWeight: FontWeight.bold,
                     color: const Color(0xFF2ECC71),
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 40),
+                
+                // 구분선
+                Container(
+                  width: double.infinity,
+                  height: 1,
+                  color: Colors.grey[300],
+                ),
+                const SizedBox(height: 80),
 
-                // 상품 옵션
-                _buildProductOptions(),
-                const SizedBox(height: 30),
+                // 클럽명 옵션
+                Text(
+                  '클럽명 *',
+                  style: GoogleFonts.notoSans(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black87,
+                  ),
+                ),
+                const SizedBox(height: 15),
+                
+                // 드롭다운
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[100],
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.grey[300]!),
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          '클럽명 (필수)',
+                          style: GoogleFonts.notoSans(
+                            fontSize: 14,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                      ),
+                      Icon(
+                        Icons.keyboard_arrow_down,
+                        color: Colors.grey[600],
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 60),
 
                 // 구매 버튼들
-                _buildPurchaseButtons(),
+                _buildNewPurchaseButtons(),
               ],
             ),
           ),
@@ -299,6 +351,87 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             style: GoogleFonts.notoSans(
               fontSize: 14,
               color: Colors.black87,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildNewPurchaseButtons() {
+    return Row(
+      children: [
+        Expanded(
+          child: ElevatedButton(
+            onPressed: () {},
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF2ECC71),
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(vertical: 18),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(25),
+              ),
+              elevation: 0,
+            ),
+            child: Text(
+              '구매하기',
+              style: GoogleFonts.notoSans(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: OutlinedButton(
+            onPressed: () {},
+            style: OutlinedButton.styleFrom(
+              foregroundColor: Colors.grey[700],
+              side: BorderSide(color: Colors.grey[300]!, width: 1),
+              padding: const EdgeInsets.symmetric(vertical: 18),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(25),
+              ),
+              backgroundColor: Colors.white,
+            ),
+            child: Text(
+              '장바구니',
+              style: GoogleFonts.notoSans(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(width: 12),
+        Container(
+          width: 54,
+          height: 54,
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey[300]!, width: 1),
+            borderRadius: BorderRadius.circular(27),
+            color: Colors.white,
+          ),
+          child: IconButton(
+            onPressed: () {},
+            icon: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.favorite_border,
+                  color: Colors.grey[600],
+                  size: 18,
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  '0',
+                  style: GoogleFonts.notoSans(
+                    fontSize: 12,
+                    color: Colors.grey[600],
+                  ),
+                ),
+              ],
             ),
           ),
         ),
