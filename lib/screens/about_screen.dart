@@ -101,7 +101,7 @@ class _AboutScreenState extends State<AboutScreen> {
       width: double.infinity,
       decoration: const BoxDecoration(
         image: DecorationImage(
-          image: AssetImage('assets/images/hero_image_1.jpg'),
+          image: AssetImage('assets/images/grandmother.jpg'),
           fit: BoxFit.cover,
         ),
       ),
