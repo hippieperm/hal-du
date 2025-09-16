@@ -183,6 +183,7 @@ class _AboutScreenState extends State<AboutScreen>
                 Padding(
                   padding: EdgeInsetsGeometry.symmetric(
                     horizontal: 400,
+                    vertical: 100,
                   ),
                   child: Column(
                     children: [
