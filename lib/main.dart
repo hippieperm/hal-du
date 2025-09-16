@@ -25,7 +25,7 @@ class HaldoApp extends StatelessWidget {
     return MaterialApp(
       title: '할두 - 할머니가 되어서도 두근두근!',
       theme: ThemeData(
-        primarySwatch: Colors.pink,₩
+        primarySwatch: Colors.pink,
         textTheme: GoogleFonts.notoSansTextTheme(),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
