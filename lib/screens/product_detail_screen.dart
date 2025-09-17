@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import '../widgets/app_bar_widget.dart';
 import '../widgets/footer_widget.dart';
+import '../models/product_model.dart';
+import '../services/product_service.dart';
 
 class ProductDetailScreen extends StatefulWidget {
-  const ProductDetailScreen({super.key});
+  final String? productId;
+
+  const ProductDetailScreen({super.key, this.productId});
 
   @override
   State<ProductDetailScreen> createState() => _ProductDetailScreenState();
@@ -14,17 +19,52 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   final ScrollController _scrollController = ScrollController();
   bool _isAppBarTransparent = false;
   int _selectedImageIndex = 0;
-
-  final List<String> _productImages = [
-    'assets/images/grandmother.jpg',
-    'assets/images/hero_image_1.jpg',
-    'assets/images/hero_image_2.jpg',
-  ];
+  Product? _product;
+  List<String> _productImages = [];
 
   @override
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
+    _loadProduct();
+  }
+
+  void _loadProduct() {
+    if (widget.productId == null) {
+      // 라우트에서 productId 가져오기
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+        final productId = args?['productId'] as String?;
+        if (productId != null) {
+          final productService = Provider.of<ProductService>(context, listen: false);
+          final product = productService.getProductById(productId);
+          if (product != null) {
+            setState(() {
+              _product = product;
+              _productImages = [product.imageUrl];
+              if (product.additionalImages != null) {
+                _productImages.addAll(product.additionalImages!);
+              }
+            });
+          }
+        }
+      });
+    } else {
+      // 직접 전달된 productId 사용
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        final productService = Provider.of<ProductService>(context, listen: false);
+        final product = productService.getProductById(widget.productId!);
+        if (product != null) {
+          setState(() {
+            _product = product;
+            _productImages = [product.imageUrl];
+            if (product.additionalImages != null) {
+              _productImages.addAll(product.additionalImages!);
+            }
+          });
+        }
+      });
+    }
   }
 
   @override
@@ -52,6 +92,32 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (_product == null) {
+      return Scaffold(
+        backgroundColor: Colors.white,
+        body: Stack(
+          children: [
+            const Center(
+              child: CircularProgressIndicator(),
+            ),
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: AppBarWidget(
+                selectedIndex: 2,
+                onItemTapped: _onItemTapped,
+                isTransparent: _isAppBarTransparent,
+                onLogoTapped: () {
+                  Navigator.pushReplacementNamed(context, '/');
+                },
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
@@ -62,7 +128,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               children: [
                 const SizedBox(height: 100),
                 Padding(
-                  padding: EdgeInsetsGeometry.symmetric(horizontal: 350),
+                  padding: const EdgeInsets.symmetric(horizontal: 350),
                   child: Column(
                     children: [
                       _buildProductDetailSection(),
@@ -167,7 +233,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               children: [
                 // 상품명
                 Text(
-                  '마음까지 강화되는 요가 ( 50대 60대 온라인 요가 클래스 )',
+                  _product!.name,
                   style: GoogleFonts.notoSans(
                     fontSize: 20,
                     fontWeight: FontWeight.w600,
@@ -180,22 +246,23 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 // NEW 태그와 가격, 공유 버튼
                 Row(
                   children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 6),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF2ECC71),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Text(
-                        'NEW',
-                        style: GoogleFonts.notoSans(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                    if (_product!.isNew == true)
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 6),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF2ECC71),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Text(
+                          'NEW',
+                          style: GoogleFonts.notoSans(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
-                    ),
                     const Spacer(),
                     IconButton(
                       onPressed: () {},
@@ -211,7 +278,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
                 // 가격
                 Text(
-                  '10,000원',
+                  '${_product!.price.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')}원',
                   style: GoogleFonts.notoSans(
                     fontSize: 32,
                     fontWeight: FontWeight.bold,
@@ -430,7 +497,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 ),
                 const SizedBox(width: 4),
                 Text(
-                  '0',
+                  '${_product!.likes ?? 0}',
                   style: GoogleFonts.notoSans(
                     fontSize: 12,
                     color: Colors.grey[600],
@@ -576,17 +643,17 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   Widget _buildInfoTable() {
     final infoItems = [
-      ['상품명', '[해기가히] 실가능은 챗감리 내인네'],
-      ['판매가격', '82,000원'],
-      ['상품 택배비용', '무료배송'],
-      ['상품 추가 정보', '할두에서만 만날 수 있는 특별한 내용들로 구성 시간 분당 타입이 없는 무제한'],
-      [
+      ['상품명', _product!.name],
+      ['판매가격', '${_product!.price.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')}원'],
+      ['상품 택배비용', _product!.shippingInfo ?? '무료배송'],
+      ['상품 설명', _product!.description],
+      if (_product!.detailDescription != null) [
         '상품에 대한 상세 정보',
-        '할두 도서로 구성된 3권 책자를 바탕으로 다양한 인생 첫 시작을 만들어 나갈 수 있는 내용입니다. 책자와 부교재를 통해 즐겁고 의미있는 시간을 보낼 수 있습니다.'
+        _product!.detailDescription!
       ],
-      [
+      if (_product!.refundPolicy != null) [
         '상품의 취급 상세 내용',
-        '1. 공정거래 위원회가 정하는 소비자 분쟁 해결기준에 의해 교환, 환불이 가능합니다.\n2. 상품에 하자가 있을 경우 구매일로부터 30일 이내에 교환, 환불이 가능합니다.\n3. 고객 변심으로 인한 취소의 경우 7일 이내에 취소 접수를 해주셔야 합니다.\n4. 단순 변심 취소의 경우 실제 출고 후 왕복 DHL GHL 착불, 배송료가 부과됩니다.\n5. 특수 케이스의 주문상품은 제작기간이 소요될 수 있으며, 주문 시점에 안내 드립니다.\n6. 개인의 사정으로 인한 일방적인 주문취소로 인하여 발생하는 손해는 고객이 부담합니다.'
+        _product!.refundPolicy!
       ],
     ];
 
