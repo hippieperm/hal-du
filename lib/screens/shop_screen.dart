@@ -295,7 +295,11 @@ class _ShopScreenState extends State<ShopScreen> {
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
         onTap: () {
-          Navigator.pushNamed(context, '/product-detail');
+          Navigator.pushNamed(
+            context,
+            '/product-detail',
+            arguments: {'productId': product.id},
+          );
         },
         onLongPress: isAdmin ? () {
           showDialog(
