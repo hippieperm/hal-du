@@ -8,6 +8,13 @@ class Product {
   final int? stock;
   final DateTime? createdAt;
   final DateTime? updatedAt;
+  final List<String>? additionalImages;
+  final String? detailDescription;
+  final String? shippingInfo;
+  final String? refundPolicy;
+  final String? options;
+  final bool? isNew;
+  final int? likes;
 
   Product({
     required this.id,
@@ -19,6 +26,13 @@ class Product {
     this.stock,
     this.createdAt,
     this.updatedAt,
+    this.additionalImages,
+    this.detailDescription,
+    this.shippingInfo,
+    this.refundPolicy,
+    this.options,
+    this.isNew,
+    this.likes,
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
@@ -30,12 +44,21 @@ class Product {
       imageUrl: json['imageUrl'],
       category: json['category'],
       stock: json['stock'],
-      createdAt: json['createdAt'] != null 
+      createdAt: json['createdAt'] != null
           ? DateTime.parse(json['createdAt'])
           : null,
-      updatedAt: json['updatedAt'] != null 
+      updatedAt: json['updatedAt'] != null
           ? DateTime.parse(json['updatedAt'])
           : null,
+      additionalImages: json['additionalImages'] != null
+          ? List<String>.from(json['additionalImages'])
+          : null,
+      detailDescription: json['detailDescription'],
+      shippingInfo: json['shippingInfo'],
+      refundPolicy: json['refundPolicy'],
+      options: json['options'],
+      isNew: json['isNew'],
+      likes: json['likes'],
     );
   }
 
@@ -50,6 +73,13 @@ class Product {
       'stock': stock,
       'createdAt': createdAt?.toIso8601String(),
       'updatedAt': updatedAt?.toIso8601String(),
+      'additionalImages': additionalImages,
+      'detailDescription': detailDescription,
+      'shippingInfo': shippingInfo,
+      'refundPolicy': refundPolicy,
+      'options': options,
+      'isNew': isNew,
+      'likes': likes,
     };
   }
 
@@ -63,6 +93,13 @@ class Product {
     int? stock,
     DateTime? createdAt,
     DateTime? updatedAt,
+    List<String>? additionalImages,
+    String? detailDescription,
+    String? shippingInfo,
+    String? refundPolicy,
+    String? options,
+    bool? isNew,
+    int? likes,
   }) {
     return Product(
       id: id ?? this.id,
@@ -74,6 +111,13 @@ class Product {
       stock: stock ?? this.stock,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      additionalImages: additionalImages ?? this.additionalImages,
+      detailDescription: detailDescription ?? this.detailDescription,
+      shippingInfo: shippingInfo ?? this.shippingInfo,
+      refundPolicy: refundPolicy ?? this.refundPolicy,
+      options: options ?? this.options,
+      isNew: isNew ?? this.isNew,
+      likes: likes ?? this.likes,
     );
   }
 }
