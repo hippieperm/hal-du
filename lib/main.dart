@@ -59,6 +59,13 @@ class HaldoApp extends StatelessWidget {
               contentId: args?['contentId'] ?? 'unknown',
             ),
           );
+        } else if (settings.name == '/product-detail') {
+          final args = settings.arguments as Map<String, dynamic>?;
+          return MaterialPageRoute(
+            builder: (context) => ProductDetailScreen(
+              productId: args?['productId'] as String?,
+            ),
+          );
         }
         return null;
       },
