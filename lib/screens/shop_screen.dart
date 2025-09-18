@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'dart:convert' show base64Decode;
 import '../widgets/app_bar_widget.dart';
 import '../widgets/footer_widget.dart';
 import '../services/auth_service.dart';
@@ -127,9 +128,10 @@ class _ShopScreenState extends State<ShopScreen> {
                 children: [
                   ElevatedButton.icon(
                     onPressed: () async {
+                      if (!mounted) return;
                       final productService = Provider.of<ProductService>(context, listen: false);
                       await productService.addSampleProducts();
-                      if (context.mounted) {
+                      if (mounted) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                             content: Text('샘플 상품이 추가되었습니다'),
@@ -385,20 +387,35 @@ class _ShopScreenState extends State<ShopScreen> {
                         decoration: BoxDecoration(
                           color: Colors.grey[100],
                         ),
-                        child: Image.asset(
-                          product.imageUrl,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return Container(
-                              color: Colors.grey[200],
-                              child: const Icon(
-                                Icons.image_not_supported,
-                                size: 40,
-                                color: Colors.grey,
+                        child: product.imageUrl.startsWith('data:image')
+                            ? Image.memory(
+                                base64Decode(product.imageUrl.split(',')[1]),
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Container(
+                                    color: Colors.grey[200],
+                                    child: const Icon(
+                                      Icons.image_not_supported,
+                                      size: 40,
+                                      color: Colors.grey,
+                                    ),
+                                  );
+                                },
+                              )
+                            : Image.asset(
+                                product.imageUrl,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Container(
+                                    color: Colors.grey[200],
+                                    child: const Icon(
+                                      Icons.image_not_supported,
+                                      size: 40,
+                                      color: Colors.grey,
+                                    ),
+                                  );
+                                },
                               ),
-                            );
-                          },
-                        ),
                       ),
 
                       // 관리자 편집 아이콘
