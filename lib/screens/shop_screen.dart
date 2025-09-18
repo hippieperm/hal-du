@@ -387,35 +387,7 @@ class _ShopScreenState extends State<ShopScreen> {
                         decoration: BoxDecoration(
                           color: Colors.grey[100],
                         ),
-                        child: product.imageUrl.startsWith('data:image')
-                            ? Image.memory(
-                                base64Decode(product.imageUrl.split(',')[1]),
-                                fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) {
-                                  return Container(
-                                    color: Colors.grey[200],
-                                    child: const Icon(
-                                      Icons.image_not_supported,
-                                      size: 40,
-                                      color: Colors.grey,
-                                    ),
-                                  );
-                                },
-                              )
-                            : Image.asset(
-                                product.imageUrl,
-                                fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) {
-                                  return Container(
-                                    color: Colors.grey[200],
-                                    child: const Icon(
-                                      Icons.image_not_supported,
-                                      size: 40,
-                                      color: Colors.grey,
-                                    ),
-                                  );
-                                },
-                              ),
+                        child: _buildProductImage(product.imageUrl),
                       ),
 
                       // 관리자 편집 아이콘
@@ -571,6 +543,66 @@ class _ShopScreenState extends State<ShopScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildProductImage(String imageUrl) {
+    // 에러 표시용 위젯
+    Widget errorWidget = Container(
+      color: Colors.grey[200],
+      child: const Icon(
+        Icons.image_not_supported,
+        size: 40,
+        color: Colors.grey,
+      ),
+    );
+
+    if (imageUrl.isEmpty) {
+      return errorWidget;
+    }
+
+    // Base64 data URL인 경우
+    if (imageUrl.startsWith('data:image')) {
+      try {
+        final base64Data = imageUrl.split(',')[1];
+        return Image.memory(
+          base64Decode(base64Data),
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) => errorWidget,
+        );
+      } catch (e) {
+        return errorWidget;
+      }
+    }
+
+    // 웹 URL인 경우 (http 또는 https로 시작)
+    if (imageUrl.startsWith('http')) {
+      return Image.network(
+        imageUrl,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) => errorWidget,
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) return child;
+          return Container(
+            color: Colors.grey[100],
+            child: Center(
+              child: CircularProgressIndicator(
+                color: const Color(0xFF2ECC71),
+                value: loadingProgress.expectedTotalBytes != null
+                    ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+                    : null,
+              ),
+            ),
+          );
+        },
+      );
+    }
+
+    // Assets 경로인 경우
+    return Image.asset(
+      imageUrl,
+      fit: BoxFit.cover,
+      errorBuilder: (context, error, stackTrace) => errorWidget,
     );
   }
 }
