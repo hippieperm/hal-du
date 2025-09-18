@@ -28,6 +28,14 @@ class _ShopScreenState extends State<ShopScreen> {
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
+    
+    // 샘플 데이터 추가 (개발용)
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final productService = Provider.of<ProductService>(context, listen: false);
+      if (productService.products.isEmpty) {
+        productService.addSampleProducts();
+      }
+    });
   }
 
   @override
@@ -540,7 +548,9 @@ class _ShopScreenState extends State<ShopScreen> {
                                       Navigator.of(context).pushNamed('/cart');
                                     } else {
                                       // 장바구니에 추가
+                                      print('Adding to cart: ${product.name} (ID: ${product.id})');
                                       cartService.addToCart(product);
+                                      print('Cart item count: ${cartService.itemCount}');
                                       ScaffoldMessenger.of(context).showSnackBar(
                                         SnackBar(
                                           content: Text('${product.name}이(가) 장바구니에 추가되었습니다'),
