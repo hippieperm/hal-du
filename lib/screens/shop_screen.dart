@@ -273,9 +273,9 @@ class _ShopScreenState extends State<ShopScreen> {
           physics: const NeverScrollableScrollPhysics(),
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 4,
-            crossAxisSpacing: 15,
-            mainAxisSpacing: 25,
-            childAspectRatio: 0.65,
+            crossAxisSpacing: 20,
+            mainAxisSpacing: 30,
+            childAspectRatio: 0.72,
           ),
           itemCount: products.length,
           itemBuilder: (context, index) {
@@ -357,17 +357,19 @@ class _ShopScreenState extends State<ShopScreen> {
         } : null,
         child: Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withValues(alpha: 0.08),
-                blurRadius: 10,
-                offset: const Offset(0, 2),
+                blurRadius: 20,
+                offset: const Offset(0, 4),
+                spreadRadius: 0,
               ),
             ],
           ),
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -381,55 +383,29 @@ class _ShopScreenState extends State<ShopScreen> {
                         width: double.infinity,
                         height: double.infinity,
                         decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          image: DecorationImage(
-                            image: AssetImage(product.imageUrl),
-                            fit: BoxFit.cover,
-                          ),
+                          color: Colors.grey[100],
                         ),
-                      ),
-
-                      // 이미지 위 오버레이 텍스트
-                      Positioned.fill(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              colors: [
-                                Colors.black.withValues(alpha: 0.2),
-                                Colors.black.withValues(alpha: 0.6),
-                              ],
-                            ),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(12),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  product.name,
-                                  style: GoogleFonts.notoSans(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                    height: 1.2,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                  maxLines: 3,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ],
-                            ),
-                          ),
+                        child: Image.asset(
+                          product.imageUrl,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Container(
+                              color: Colors.grey[200],
+                              child: const Icon(
+                                Icons.image_not_supported,
+                                size: 40,
+                                color: Colors.grey,
+                              ),
+                            );
+                          },
                         ),
                       ),
 
                       // 관리자 편집 아이콘
                       if (isAdmin)
                         Positioned(
-                          top: 8,
-                          right: 8,
+                          top: 12,
+                          right: 12,
                           child: GestureDetector(
                             onTap: () {
                               // 상품 상세 페이지로의 이동을 막고 편집 다이얼로그만 열기
@@ -487,15 +463,22 @@ class _ShopScreenState extends State<ShopScreen> {
                               );
                             },
                             child: Container(
-                              padding: const EdgeInsets.all(4),
+                              padding: const EdgeInsets.all(6),
                               decoration: BoxDecoration(
-                                color: Colors.black.withValues(alpha: 0.7),
+                                color: Colors.white,
                                 shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withValues(alpha: 0.2),
+                                    blurRadius: 4,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ],
                               ),
                               child: const Icon(
                                 Icons.edit,
                                 size: 16,
-                                color: Colors.white,
+                                color: Color(0xFF2ECC71),
                               ),
                             ),
                           ),
@@ -508,17 +491,18 @@ class _ShopScreenState extends State<ShopScreen> {
                 Expanded(
                   child: Container(
                     color: Colors.white,
-                    padding: const EdgeInsets.all(8),
+                    padding: const EdgeInsets.all(12),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        // 설명
-                        Flexible(
+                        // 상품명
+                        Expanded(
+                          flex: 2,
                           child: Text(
-                            product.description,
+                            product.name,
                             style: GoogleFonts.notoSans(
-                              fontSize: 10,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
                               color: Colors.black87,
                               height: 1.2,
                             ),
@@ -526,16 +510,40 @@ class _ShopScreenState extends State<ShopScreen> {
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        const SizedBox(height: 4),
+                        
+                        // 설명
+                        Expanded(
+                          flex: 2,
+                          child: Text(
+                            product.description,
+                            style: GoogleFonts.notoSans(
+                              fontSize: 11,
+                              color: Colors.grey[600],
+                              height: 1.3,
+                            ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
 
                         // 가격
-                        Text(
-                          '${product.price.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')}원',
-                          style: GoogleFonts.notoSans(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                            color: const Color(0xFF2ECC71),
-                          ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              '${product.price.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')}원',
+                              style: GoogleFonts.notoSans(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: const Color(0xFF2ECC71),
+                              ),
+                            ),
+                            Icon(
+                              Icons.arrow_forward_ios,
+                              size: 12,
+                              color: Colors.grey[400],
+                            ),
+                          ],
                         ),
                       ],
                     ),
