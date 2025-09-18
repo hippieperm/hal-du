@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'signup_dialog.dart';
 import 'login_dialog.dart';
 import '../services/auth_service.dart';
+import '../services/cart_service.dart';
 
 class AppBarWidget extends StatefulWidget {
   final int selectedIndex;
@@ -96,6 +97,53 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                             ),
                           ),
                           const SizedBox(width: 12),
+                          // 장바구니 아이콘
+                          Consumer<CartService>(
+                            builder: (context, cartService, child) {
+                              return Stack(
+                                children: [
+                                  IconButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pushNamed('/cart');
+                                    },
+                                    icon: Icon(
+                                      Icons.shopping_cart_outlined,
+                                      color: widget.isTransparent
+                                          ? Colors.white.withValues(alpha: 0.9)
+                                          : Colors.black87,
+                                      size: 24,
+                                    ),
+                                  ),
+                                  if (cartService.itemCount > 0)
+                                    Positioned(
+                                      right: 6,
+                                      top: 6,
+                                      child: Container(
+                                        padding: const EdgeInsets.all(4),
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xFF2ECC71),
+                                          borderRadius: BorderRadius.circular(10),
+                                        ),
+                                        constraints: const BoxConstraints(
+                                          minWidth: 20,
+                                          minHeight: 20,
+                                        ),
+                                        child: Text(
+                                          '${cartService.itemCount}',
+                                          style: GoogleFonts.notoSans(
+                                            color: Colors.white,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              );
+                            },
+                          ),
+                          const SizedBox(width: 8),
                           TextButton(
                             onPressed: () async {
                               await authService.logout();
@@ -120,6 +168,53 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                     } else {
                       return Row(
                         children: [
+                          // 장바구니 아이콘
+                          Consumer<CartService>(
+                            builder: (context, cartService, child) {
+                              return Stack(
+                                children: [
+                                  IconButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pushNamed('/cart');
+                                    },
+                                    icon: Icon(
+                                      Icons.shopping_cart_outlined,
+                                      color: widget.isTransparent
+                                          ? Colors.white.withValues(alpha: 0.9)
+                                          : Colors.black87,
+                                      size: 24,
+                                    ),
+                                  ),
+                                  if (cartService.itemCount > 0)
+                                    Positioned(
+                                      right: 6,
+                                      top: 6,
+                                      child: Container(
+                                        padding: const EdgeInsets.all(4),
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xFF2ECC71),
+                                          borderRadius: BorderRadius.circular(10),
+                                        ),
+                                        constraints: const BoxConstraints(
+                                          minWidth: 20,
+                                          minHeight: 20,
+                                        ),
+                                        child: Text(
+                                          '${cartService.itemCount}',
+                                          style: GoogleFonts.notoSans(
+                                            color: Colors.white,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              );
+                            },
+                          ),
+                          const SizedBox(width: 8),
                           TextButton(
                             onPressed: () {
                               showDialog(
