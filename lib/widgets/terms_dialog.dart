@@ -9,7 +9,6 @@ class TermsDialog extends StatefulWidget {
 }
 
 class _TermsDialogState extends State<TermsDialog> {
-  bool _agreeToAll = false;
   // final bool _agreeToTerms = false;  // TODO: Use when needed
   bool _agreeToPrivacy = false;
   bool _agreeToCollection = false;
@@ -59,9 +58,8 @@ class _TermsDialogState extends State<TermsDialog> {
                     _buildCheckboxItem(
                       value: _allRequiredChecked && _agreeToMarketing,
                       onChanged: (value) => setState(() {
-                        _agreeToAll = value!;
                         // _agreeToTerms = value;
-                        _agreeToPrivacy = value;
+                        _agreeToPrivacy = value!;
                         _agreeToCollection = value;
                         _confirmAge = value;
                         _agreeToMarketing = value;
