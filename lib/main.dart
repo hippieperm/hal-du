@@ -11,6 +11,8 @@ import 'screens/product_detail_screen.dart';
 import 'screens/content_detail_screen.dart';
 import 'services/auth_service.dart';
 import 'services/product_service.dart';
+import 'services/cart_service.dart';
+import 'screens/cart_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,6 +27,7 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (context) => AuthService()),
         ChangeNotifierProvider(create: (context) => ProductService()),
+        ChangeNotifierProvider(create: (context) => CartService()),
       ],
       child: const HaldoApp(),
     ),
@@ -49,6 +52,7 @@ class HaldoApp extends StatelessWidget {
         '/about': (context) => const AboutScreen(),
         '/contents': (context) => const ContentsScreen(),
         '/shop': (context) => const ShopScreen(),
+        '/cart': (context) => const CartScreen(),
         '/product-detail': (context) => const ProductDetailScreen(),
       },
       onGenerateRoute: (settings) {
