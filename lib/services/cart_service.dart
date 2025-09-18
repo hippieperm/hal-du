@@ -16,13 +16,22 @@ class CartService extends ChangeNotifier {
   bool get isNotEmpty => _cartItems.isNotEmpty;
 
   void addToCart(Product product, {int quantity = 1}) {
+    print('CartService.addToCart called with product: ${product.name} (ID: ${product.id})');
+    
+    if (product.id.isEmpty) {
+      print('Error: Product ID is empty, cannot add to cart');
+      return;
+    }
+    
     final existingIndex = _cartItems.indexWhere(
       (item) => item.productId == product.id,
     );
 
     if (existingIndex >= 0) {
+      print('Product already in cart, increasing quantity');
       _cartItems[existingIndex].quantity += quantity;
     } else {
+      print('Adding new product to cart');
       final cartItem = CartItem(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
         productId: product.id,
@@ -34,8 +43,10 @@ class CartService extends ChangeNotifier {
         addedAt: DateTime.now(),
       );
       _cartItems.add(cartItem);
+      print('Cart item added. New cart size: ${_cartItems.length}');
     }
     
+    print('Total items in cart: ${itemCount}');
     notifyListeners();
   }
 
@@ -83,6 +94,7 @@ class CartService extends ChangeNotifier {
   }
 
   bool isInCart(String productId) {
+    if (productId.isEmpty) return false;
     return _cartItems.any((item) => item.productId == productId);
   }
 
