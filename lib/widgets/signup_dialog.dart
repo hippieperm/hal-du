@@ -94,7 +94,7 @@ class _SignupDialogState extends State<SignupDialog> {
         });
       } else {
         // 약관 동의 안하면 다이얼로그 닫기
-        if (context.mounted) {
+        if (mounted) {
           Navigator.of(context).pop();
         }
       }
