@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'dart:typed_data';
-import 'dart:convert';
 
 class WebImageUploadWidget extends StatefulWidget {
   final Function(String imageUrl) onImageSelected;
@@ -19,8 +17,6 @@ class WebImageUploadWidget extends StatefulWidget {
 
 class _WebImageUploadWidgetState extends State<WebImageUploadWidget> {
   late TextEditingController _imageUrlController;
-  Uint8List? _selectedImageBytes;
-  String? _selectedImageName;
 
   @override
   void initState() {
