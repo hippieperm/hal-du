@@ -19,27 +19,22 @@ class ProductService extends ChangeNotifier {
   }
 
   void _initProductService() {
-    print('🔥 ProductService: Initializing Firestore listener...');
     
     // Firestore 실시간 리스너 설정
     _firestore.collection(_collection)
         .orderBy('createdAt', descending: true)
         .snapshots()
         .listen((QuerySnapshot snapshot) {
-      print('🔥 ProductService: Received snapshot with ${snapshot.docs.length} documents');
       
       _products = snapshot.docs.map((doc) {
         final data = doc.data() as Map<String, dynamic>;
         data['id'] = doc.id;
-        print('🔥 ProductService: Processing product: ${data['name']}');
         return Product.fromJson(data);
       }).toList();
       
-      print('🔥 ProductService: Total products loaded: ${_products.length}');
       notifyListeners();
     }, onError: (error) {
       _errorMessage = 'Firestore 연결 오류: $error';
-      print('❌ ProductService: Firestore error: $error');
       notifyListeners();
     });
   }
@@ -60,7 +55,6 @@ class ProductService extends ChangeNotifier {
   }
 
   Future<bool> addProduct(Product product) async {
-    print('🔥 ProductService: Starting addProduct for: ${product.name}');
     
     _isLoading = true;
     _errorMessage = null;
@@ -72,20 +66,16 @@ class ProductService extends ChangeNotifier {
         updatedAt: DateTime.now(),
       );
 
-      print('🔥 ProductService: Product data to add: ${newProduct.toJson()}');
 
       // Firestore에 상품 추가 (id는 자동 생성)
-      final docRef = await _firestore.collection(_collection).add(newProduct.toJson());
+      await _firestore.collection(_collection).add(newProduct.toJson());
       
-      print('🔥 ProductService: Successfully added product with ID: ${docRef.id}');
       
       _isLoading = false;
       notifyListeners();
       return true;
     } catch (e) {
       _errorMessage = '상품 추가 중 오류가 발생했습니다: $e';
-      print('❌ ProductService: Error adding product: $e');
-      print('❌ ProductService: Error type: ${e.runtimeType}');
       _isLoading = false;
       notifyListeners();
       return false;
@@ -140,7 +130,6 @@ class ProductService extends ChangeNotifier {
 
   // 초기 샘플 데이터 추가 (개발용)
   Future<void> addSampleProducts() async {
-    print('🔥 ProductService: Starting to add sample products...');
     
     final sampleProducts = [
       Product(
@@ -200,20 +189,15 @@ class ProductService extends ChangeNotifier {
       ),
     ];
 
-    print('🔥 ProductService: Adding ${sampleProducts.length} sample products');
 
     for (int i = 0; i < sampleProducts.length; i++) {
       final product = sampleProducts[i];
-      print('🔥 ProductService: Adding sample product ${i + 1}/${sampleProducts.length}: ${product.name}');
       final success = await addProduct(product);
       if (success) {
-        print('✅ ProductService: Sample product ${i + 1} added successfully');
       } else {
-        print('❌ ProductService: Failed to add sample product ${i + 1}');
       }
     }
     
-    print('🔥 ProductService: Finished adding sample products');
   }
 
   void clearError() {
