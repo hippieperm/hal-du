@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../models/product_model.dart';
-import 'simple_text_image_widget.dart';
+import 'web_image_upload_widget.dart';
 
 class ProductManagementDialog extends StatefulWidget {
   final Product? product;
@@ -164,7 +164,7 @@ class _ProductManagementDialogState extends State<ProductManagementDialog>
   Widget _buildImageUploadSection() {
     return Container(
       margin: const EdgeInsets.only(bottom: 20),
-      child: SimpleTextImageWidget(
+      child: WebImageUploadWidget(
         initialImageUrl: _currentImageUrl,
         onImageSelected: (imageUrl) {
           setState(() {
