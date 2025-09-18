@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../models/product_model.dart';
+import 'simple_text_image_widget.dart';
 
 class ProductManagementDialog extends StatefulWidget {
   final Product? product;
@@ -34,6 +35,8 @@ class _ProductManagementDialogState extends State<ProductManagementDialog>
   late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
   late Animation<double> _fadeAnimation;
+  
+  String _currentImageUrl = '';
 
   @override
   void initState() {
@@ -45,6 +48,7 @@ class _ProductManagementDialogState extends State<ProductManagementDialog>
     _stockController = TextEditingController(text: widget.product?.stock?.toString() ?? '0');
     final productCategory = widget.product?.category ?? '전체';
     _selectedCategory = _categories.contains(productCategory) ? productCategory : '전체';
+    _currentImageUrl = widget.product?.imageUrl ?? '';
     
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 400),
@@ -157,11 +161,27 @@ class _ProductManagementDialogState extends State<ProductManagementDialog>
     );
   }
 
+  Widget _buildImageUploadSection() {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 20),
+      child: SimpleTextImageWidget(
+        initialImageUrl: _currentImageUrl,
+        onImageSelected: (imageUrl) {
+          setState(() {
+            _currentImageUrl = imageUrl;
+            _imageUrlController.text = imageUrl;
+          });
+        },
+      ),
+    );
+  }
+
+
   Widget _buildCategoryDropdown() {
     return Container(
       margin: const EdgeInsets.only(bottom: 20),
       child: DropdownButtonFormField<String>(
-        value: _categories.contains(_selectedCategory) ? _selectedCategory : _categories.first,
+        initialValue: _categories.contains(_selectedCategory) ? _selectedCategory : _categories.first,
         decoration: InputDecoration(
           labelText: '카테고리',
           prefixIcon: Container(
@@ -241,7 +261,7 @@ class _ProductManagementDialogState extends State<ProductManagementDialog>
                 return Transform.scale(
                   scale: _scaleAnimation.value,
                   child: Container(
-                    constraints: const BoxConstraints(maxWidth: 700, maxHeight: 800),
+                    constraints: const BoxConstraints(maxWidth: 700, maxHeight: 850),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(20),
@@ -382,18 +402,8 @@ class _ProductManagementDialogState extends State<ProductManagementDialog>
                                     },
                                   ),
                                   
-                                  _buildTextField(
-                                    controller: _imageUrlController,
-                                    label: '이미지 경로',
-                                    icon: Icons.image,
-                                    hint: 'assets/images/product.jpg',
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return '이미지 경로를 입력해주세요';
-                                      }
-                                      return null;
-                                    },
-                                  ),
+                                  // 이미지 업로드 섹션
+                                  _buildImageUploadSection(),
                                   
                                   _buildCategoryDropdown(),
                                   
@@ -505,13 +515,23 @@ class _ProductManagementDialogState extends State<ProductManagementDialog>
                                 child: ElevatedButton.icon(
                                   onPressed: () {
                                     if (_formKey.currentState!.validate()) {
+                                      if (_currentImageUrl.isEmpty) {
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          const SnackBar(
+                                            content: Text('이미지를 업로드하거나 경로를 입력해주세요'),
+                                            backgroundColor: Colors.red,
+                                          ),
+                                        );
+                                        return;
+                                      }
+                                      
                                       final priceText = _priceController.text.replaceAll(',', '');
                                       final product = Product(
                                         id: widget.product?.id ?? '',
                                         name: _nameController.text,
                                         price: double.parse(priceText),
                                         description: _descriptionController.text,
-                                        imageUrl: _imageUrlController.text,
+                                        imageUrl: _currentImageUrl,
                                         category: _selectedCategory,
                                         stock: int.tryParse(_stockController.text) ?? 0,
                                         createdAt: widget.product?.createdAt,
@@ -539,7 +559,7 @@ class _ProductManagementDialogState extends State<ProductManagementDialog>
                                     ),
                                   ),
                                 ),
-                              ),
+              ),
                             ],
                           ),
                         ),
