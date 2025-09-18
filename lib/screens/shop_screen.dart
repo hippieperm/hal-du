@@ -6,6 +6,7 @@ import '../widgets/app_bar_widget.dart';
 import '../widgets/footer_widget.dart';
 import '../services/auth_service.dart';
 import '../services/product_service.dart';
+import '../services/cart_service.dart';
 import '../widgets/admin/product_management_dialog.dart';
 import '../models/product_model.dart';
 
@@ -515,22 +516,63 @@ class _ShopScreenState extends State<ShopScreen> {
                           ),
                         ),
 
-                        // 가격
+                        // 가격 및 장바구니 버튼
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              '${product.price.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')}원',
-                              style: GoogleFonts.notoSans(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                                color: const Color(0xFF2ECC71),
+                            Expanded(
+                              child: Text(
+                                '${product.price.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')}원',
+                                style: GoogleFonts.notoSans(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: const Color(0xFF2ECC71),
+                                ),
                               ),
                             ),
-                            Icon(
-                              Icons.arrow_forward_ios,
-                              size: 12,
-                              color: Colors.grey[400],
+                            Consumer<CartService>(
+                              builder: (context, cartService, child) {
+                                final isInCart = cartService.isInCart(product.id);
+                                return InkWell(
+                                  onTap: () {
+                                    if (isInCart) {
+                                      // 이미 장바구니에 있으면 장바구니로 이동
+                                      Navigator.of(context).pushNamed('/cart');
+                                    } else {
+                                      // 장바구니에 추가
+                                      cartService.addToCart(product);
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                          content: Text('${product.name}이(가) 장바구니에 추가되었습니다'),
+                                          backgroundColor: Colors.green,
+                                          action: SnackBarAction(
+                                            label: '장바구니 보기',
+                                            textColor: Colors.white,
+                                            onPressed: () {
+                                              Navigator.of(context).pushNamed('/cart');
+                                            },
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  },
+                                  borderRadius: BorderRadius.circular(6),
+                                  child: Container(
+                                    padding: const EdgeInsets.all(6),
+                                    decoration: BoxDecoration(
+                                      color: isInCart 
+                                          ? const Color(0xFF2ECC71) 
+                                          : Colors.grey[100],
+                                      borderRadius: BorderRadius.circular(6),
+                                    ),
+                                    child: Icon(
+                                      isInCart ? Icons.shopping_cart : Icons.add_shopping_cart,
+                                      size: 16,
+                                      color: isInCart ? Colors.white : Colors.grey[600],
+                                    ),
+                                  ),
+                                );
+                              },
                             ),
                           ],
                         ),
