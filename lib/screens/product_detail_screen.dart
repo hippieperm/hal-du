@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'dart:convert' show base64Decode;
 import '../widgets/app_bar_widget.dart';
 import '../widgets/footer_widget.dart';
 import '../models/product_model.dart';
@@ -210,10 +211,39 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                 : Colors.grey[300]!,
                             width: 2,
                           ),
-                          image: DecorationImage(
-                            image: AssetImage(imagePath),
-                            fit: BoxFit.cover,
-                          ),
+                          color: Colors.grey[100],
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(4),
+                          child: imagePath.startsWith('data:image')
+                              ? Image.memory(
+                                  base64Decode(imagePath.split(',')[1]),
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return Container(
+                                      color: Colors.grey[200],
+                                      child: const Icon(
+                                        Icons.image_not_supported,
+                                        size: 20,
+                                        color: Colors.grey,
+                                      ),
+                                    );
+                                  },
+                                )
+                              : Image.asset(
+                                  imagePath,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return Container(
+                                      color: Colors.grey[200],
+                                      child: const Icon(
+                                        Icons.image_not_supported,
+                                        size: 20,
+                                        color: Colors.grey,
+                                      ),
+                                    );
+                                  },
+                                ),
                         ),
                       ),
                     );
